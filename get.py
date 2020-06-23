@@ -21,17 +21,3 @@ def getItems(rssURL):
 
 mkdwn = getItems('https://medium.com/feed/@harshchau')
 print(mkdwn)
-
-'''
-ns = {'real_person': 'http://people.example.com',
-      'role': 'http://characters.example.com'}
-
-for actor in root.findall('real_person:actor', ns):
-    name = actor.find('real_person:name', ns)
-    print(name.text)
-    for char in actor.findall('role:character', ns):
-        print(' |-->', char.text)
-
-
-https://medium.com/series/py-6c6c7d22788f
-'''
