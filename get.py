@@ -14,9 +14,12 @@ def getItems(rssURL) -> dict:
     posts = {}
     tree = ET.fromstring(loadRSS(rssURL).text)
     for item in tree.iter('item'):
-        title = item.find('title').text
-        content = item.find('content:encoded', ns)
-        posts[title] = html2text.html2text(content.text)
+        try:
+            title = item.find('title').text
+            content = item.find('content:encoded', ns)
+            posts[title] = html2text.html2text(content.text)
+        except Exception as e:
+            print(e, title)
     
     return posts
 
