@@ -19,7 +19,8 @@ def getItems(rssURL):
             return html2text.html2text(content.text)
 
 
-getItems('https://medium.com/feed/@harshchau')
+mkdwn = getItems('https://medium.com/feed/@harshchau')
+print(mkdwn)
 
 '''
 ns = {'real_person': 'http://people.example.com',
