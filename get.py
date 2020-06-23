@@ -13,11 +13,9 @@ def getItems(rssURL):
     tree = ET.fromstring(loadRSS(rssURL).text)
     for item in tree.iter('item'):
         title = item.find('title').text
-        if title != 'Sample': return
-        else:
-            content = item.find('content:encoded', ns)
-            return html2text.html2text(content.text)
+        content = item.find('content:encoded', ns)
+        return html2text.html2text(content.text)
 
 
-mkdwn = getItems('https://medium.com/feed/@harshchau')
+mkdwn = getItems('https://medium.com/feed/@gavinlewis')
 print(mkdwn)
