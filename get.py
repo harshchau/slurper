@@ -2,12 +2,14 @@ import requests
 import xml.etree.ElementTree as ET 
 import html2text
 from sys import argv
+import logging 
+from bs4 import BeautifulSoup
 
 def loadRSS(url):
     resp = requests.get(url)
     return resp
 
-def getItems(rssURL) -> dict:
+def getRssItems(rssURL) -> dict:
     ns = {'dc': 'http://purl.org/dc/elements/1.1/', 
             'content': 'http://purl.org/rss/1.0/modules/content/'
         }
@@ -19,7 +21,7 @@ def getItems(rssURL) -> dict:
             content = item.find('content:encoded', ns)
             posts[title] = html2text.html2text(content.text)
         except Exception as e:
-            print(e, title)
+            logging.error(f'Error in title: {title} | Error message: {e}', exc_info = True)
     
     return posts
 
@@ -28,11 +30,10 @@ def export():
     try:
         user_name = argv[1]
     except IndexError:
-        print('Enter the medium username')
-        user_name = input('> ')
+        user_name = input('Enter a username > ')
     
     mkdwn = ''
-    posts = getItems(url + user_name)
+    posts = getRssItems(url + user_name)
     for title, content in posts.items():
         mkdwn += '#' + title + '\n\n' + content
     
