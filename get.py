@@ -25,7 +25,7 @@ def getRssItems(rssURL) -> dict:
     
     return posts
 
-def export():
+def exportRss():
     url = 'https://medium.com/feed/@'
     try:
         user_name = argv[1]
@@ -40,4 +40,4 @@ def export():
     print(mkdwn)
 
 if __name__ == '__main__':
-    export() 
+    exportRss() 
