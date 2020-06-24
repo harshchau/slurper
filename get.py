@@ -5,16 +5,16 @@ from sys import argv
 import logging 
 from bs4 import BeautifulSoup
 
-def loadRSS(url):
+def load_rss(url):
     resp = requests.get(url)
     return resp
 
-def getRssItems(rssURL) -> dict:
+def get_rss_items(rssURL) -> dict:
     ns = {'dc': 'http://purl.org/dc/elements/1.1/', 
             'content': 'http://purl.org/rss/1.0/modules/content/'
         }
     posts = {}
-    tree = ET.fromstring(loadRSS(rssURL).text)
+    tree = ET.fromstring(load_rss(rssURL).text)
     for item in tree.iter('item'):
         try:
             title = item.find('title').text
@@ -25,7 +25,7 @@ def getRssItems(rssURL) -> dict:
     
     return posts
 
-def exportRss():
+def export_rss():
     url = 'https://medium.com/feed/@'
     try:
         user_name = argv[1]
@@ -33,11 +33,11 @@ def exportRss():
         user_name = input('Enter a username > ')
     
     mkdwn = ''
-    posts = getRssItems(url + user_name)
+    posts = get_rss_items(url + user_name)
     for title, content in posts.items():
         mkdwn += '#' + title + '\n\n' + content
     
     print(mkdwn)
 
 if __name__ == '__main__':
-    exportRss() 
+    export_rss() 
