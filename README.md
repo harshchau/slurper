@@ -1,7 +1,7 @@
 # Medium series to markdown
 
-This module takes a medium RSS feed and converts 
-it to markdown
+This module takes a medium series and converts
+it to markdown. This is not meant for either Medium RSS feeds or regular Medium posts or publications
 
 **Note**: Medium's support for RSS and the API is pretty limited. This module is based on a scraper and is pretty fragile itself. Contact me if something is broken and I will address it in a reasonable time
 
