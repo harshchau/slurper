@@ -8,9 +8,20 @@ from bs4 import BeautifulSoup
 import os
 import argparse 
 
+# Logging config 
 logging.basicConfig(level = logging.ERROR)
 log = logging.getLogger(__name__)
 logging.getLogger(__name__).setLevel(logging.INFO)
+
+# args config 
+parser = argparse.ArgumentParser()
+parser.add_argument('url', help = 'URL of the medium series', type = str)
+parser.add_argument('')
+args = parser.parse_args()
+
+url = args.url # https://medium.com/series/py-6c6c7d22788f
+log.info(f'series-url: {url}')
+
 
 def get_series(url:str) -> None:
     html_doc = requests.get(url).text
@@ -53,4 +64,4 @@ def make_attr_none(tag):
 
 if __name__ == '__main__':
     #export_rss() 
-    get_series('https://medium.com/series/py-6c6c7d22788f')
+    get_series(url)
