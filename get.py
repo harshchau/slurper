@@ -5,20 +5,21 @@ from sys import argv
 import logging 
 import bs4
 from bs4 import BeautifulSoup
+import os
+
+log = logging.getLogger(__name__)
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 def get_series(url:str) -> None:
     html_doc = requests.get(url).text
     soup = BeautifulSoup(html_doc, 'html.parser')
     sections = soup.find_all('section')
     for section in sections:
-        #content = section.find_all(id = True)
-        #c = section.findChildren(id = True)
-        #print(section)
         section.attrs = None
-        #print(section)
+        log.debug(section)
         [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
-        a = html2text.html2text(str(section))
-        print(a)
+        mkdwn = html2text.html2text(str(section))
+        print(mkdwn) # Print to console
         
 def make_attr_none(tag):
     if tag.name == 'img': # For img tags
