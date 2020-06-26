@@ -20,7 +20,10 @@ def get_series(url:str) -> None:
         [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
         mkdwn = html2text.html2text(str(section))
         print(mkdwn) # Print to console
-        
+
+# Remove all HTML attributes except for img tags with srcset
+# We keep srcset as this has all the image sizes
+# Convert srcset to src because html2text does not work with srcset 
 def make_attr_none(tag):
     if tag.name == 'img': # For img tags
         # Get the dict of tag.attrs where attribute is srcset and the parent is a div
