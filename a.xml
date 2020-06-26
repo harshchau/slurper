@@ -1,4 +1,14 @@
-<section>
+[<section class="hf hg hh ae hi hj hk">
+    <div class="ap hl ae hm hn">
+        <div>
+            <h1 class="ho hp bj cg ch hq hr hs em" id="68bf">.py</h1>
+        </div>
+    </div>
+</section>,<section class="hf hg hh ae hi hj hk">
+    <div class="ap hl ae hm hn">
+        <p class="hw hx bj bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="1aed">An updating series of flash cards for the Python apprentice</p>
+    </div>
+</section>,<section class="hf hg hh ae hi hj hk">
     <div class="ap hl ae hm hn">
         <blockquote class="in io ip">
             <p class="hw hx iq bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="3f5a">Printing in Python</p>
@@ -21,4 +31,25 @@
             </div>
         </figure>
     </div>
-</section>
+</section>,<section class="hf hg hh ae hi hj hk">
+    <div class="ap hl ae hm hn">
+        <blockquote class="in io ip">
+            <p class="hw hx iq bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="321b">Operator priority</p>
+        </blockquote>
+        <figure class="is it iu iv iw ix an ao paragraph-image">
+            <div class="an ao jo">
+                <div class="je l ee jf">
+                    <div class="jp jh l">
+                        <div class="ht jb m n o fu ae cw jc jd">
+                            <img class="m n o fu ae ji jj jk" height="674" role="presentation" src="https://miro.medium.com/max/60/1*-Oj-C1WtzaHwGryem6WOsw.png?q=20" width="670"/>
+                        </div>
+                        <img class="ht jb m n o fu ae jl" height="674" role="presentation" sizes="670px" srcset="https://miro.medium.com/max/552/1*-Oj-C1WtzaHwGryem6WOsw.png 276w, https://miro.medium.com/max/1104/1*-Oj-C1WtzaHwGryem6WOsw.png 552w, https://miro.medium.com/max/1280/1*-Oj-C1WtzaHwGryem6WOsw.png 640w, https://miro.medium.com/max/1340/1*-Oj-C1WtzaHwGryem6WOsw.png 670w" width="670"/>
+                        <noscript>
+                            <img class="m n o fu ae" height="674" role="presentation" sizes="670px" src="https://miro.medium.com/max/1340/1*-Oj-C1WtzaHwGryem6WOsw.png" srcset="https://miro.medium.com/max/552/1*-Oj-C1WtzaHwGryem6WOsw.png 276w, https://miro.medium.com/max/1104/1*-Oj-C1WtzaHwGryem6WOsw.png 552w, https://miro.medium.com/max/1280/1*-Oj-C1WtzaHwGryem6WOsw.png 640w, https://miro.medium.com/max/1340/1*-Oj-C1WtzaHwGryem6WOsw.png 670w" width="670"/>
+                        </noscript>
+                    </div>
+                </div>
+            </div>
+        </figure>
+    </div>
+</section>]
