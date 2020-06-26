@@ -1,8 +1,9 @@
 import json
+import uuid 
 
 class Series:
     def __init__(self) -> None:
-        self.id = None 
+        self.id = str(uuid.uuid4())
         self.name = None 
         self.img_url = None 
         self.sections = []
@@ -15,7 +16,7 @@ class Series:
 
 class Section:
     def __init__(self) -> None:
-        self.id = None 
+        self.id = str(uuid.uuid4())
         self.contents = []
     
     def __str__(self):
@@ -23,7 +24,7 @@ class Section:
 
 class Content:
     def __init__(self) -> None:
-        self.id = None 
+        self.id = str(uuid.uuid4())
         self.type = None 
         self.text = None 
 
