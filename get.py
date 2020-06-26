@@ -12,7 +12,7 @@ from series import Series
 # Logging config 
 logging.basicConfig(level = logging.ERROR)
 log = logging.getLogger(__name__)
-logging.getLogger(__name__).setLevel(logging.INFO)
+logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 # args config 
 parser = argparse.ArgumentParser()
@@ -22,16 +22,17 @@ args = parser.parse_args()
 url = args.url # https://medium.com/series/py-6c6c7d22788f
 log.info(f'series-url: {url}')
 
-# Globals
-series = Series()
-print(series.to_json())
+# Medium series object
+s = Series()
 
 def get_series(url:str) -> None:
     html_doc = requests.get(url).text
     soup = BeautifulSoup(html_doc, 'html.parser')
     sections = soup.find_all('section')
+    s.name = sections[0].string # First section is the series title 
+    s.img_url = None # Hardcoded to none as it is not available 
     for section in sections:
-        section.attrs = None
+        section.attrs = None # Remove attributes
         log.debug(section)
         [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
         mkdwn = html2text.html2text(str(section))
@@ -66,5 +67,5 @@ def make_attr_none(tag):
     return tag
 
 if __name__ == '__main__':
-    #export_rss() 
     get_series(url)
+    print(s.to_json())
