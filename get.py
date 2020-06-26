@@ -6,9 +6,11 @@ import logging
 import bs4
 from bs4 import BeautifulSoup
 import os
+import argparse 
 
+logging.basicConfig(level = logging.ERROR)
 log = logging.getLogger(__name__)
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 def get_series(url:str) -> None:
     html_doc = requests.get(url).text
