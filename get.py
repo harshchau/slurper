@@ -70,8 +70,6 @@ def make_attr_none(tag):
             a = a[-1]
             # Set the src attribute to the last URL
             tag.attrs['src'] = a
-        elif 'href' in tag.attrs:
-            print('++++++++++++')
     else:
         tag.attrs = None # Remove all attributes
     return tag
