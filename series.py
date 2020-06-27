@@ -32,11 +32,10 @@ class Section:
 class Content:
     def __init__(self) -> None:
         self.id = str(uuid.uuid4())
-        self.type = None 
         self.text = None 
 
     def __str__(self):
-        return f'ID: {self.id}\nType: {self.type}\nText: {self.text}'
+        return f'ID: {self.id}\nText: {self.text}'
 
 def populate_test():
     s = Series()
