@@ -82,6 +82,8 @@ def get_contents(section_tag: bs4.element.Tag):
     for str in s:
         content = Content()
         content.text = str
+        if str.parent.name == 'figcaption': content.type = 'caption'
+        else: content.type = 'text'
         contents.append(content)
 
     return contents

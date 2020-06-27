@@ -32,6 +32,7 @@ class Section:
 class Content:
     def __init__(self) -> None:
         self.id = str(uuid.uuid4())
+        self.type = None
         self.text = None 
 
     def __str__(self):
