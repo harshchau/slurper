@@ -83,6 +83,9 @@ def get_contents(section_tag: bs4.element.Tag):
         content = Content()
         content.text = str
         if str.parent.name == 'figcaption': content.type = 'caption'
+        elif str.parent.name == 'a': 
+            content.type = 'url'
+            content.url = str.parent.attrs['href']
         else: content.type = 'text'
         contents.append(content)
 
