@@ -1,55 +1,76 @@
 [<section class="hf hg hh ae hi hj hk">
     <div class="ap hl ae hm hn">
         <div>
-            <h1 class="ho hp bj cg ch hq hr hs em" id="68bf">.py</h1>
+            <h1 class="ho hp bj cg ch hq hr hs em" id="8215">Sample</h1>
         </div>
     </div>
 </section>,<section class="hf hg hh ae hi hj hk">
     <div class="ap hl ae hm hn">
-        <p class="hw hx bj bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="1aed">An updating series of flash cards for the Python apprentice</p>
+        <p class="hw hx bj bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="81ac">
+            <strong class="bo il">Bold content</strong>
+        </p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="ae3a">
+            <em class="ir">Italic content</em>
+        </p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="0bc5">
+            <a class="fn is it iu iv iw" href="http://www.google.com" rel="noopener nofollow" target="_blank">URL</a>
+        </p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="fe12">
+            <a class="fn is it iu iv iw" href="http://www.google.com" rel="noopener nofollow" target="_blank">
+                <strong class="bo il">
+                    <em class="ir">Bold italic URL</em>
+                </strong>
+            </a>
+        </p>
+        <h1 class="ho hp bj cg ch ix iy iz ja jb jc jd je jf jg jh ji jj jk jl hs cd" id="e1e2">Big title</h1>
+        <h2 class="jm hp bj cg ch jn jo jp jq jr js jt ju jv jw jx jy jz ka kb kc cd" id="a99b">Small title</h2>
     </div>
-</section>,<section class="hf hg hh ae hi hj hk">
-    <div class="ap hl ae hm hn">
-        <blockquote class="in io ip">
-            <p class="hw hx iq bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="3f5a">Printing in Python</p>
-        </blockquote>
-        <figure class="is it iu iv iw ix an ao paragraph-image">
-            <div class="iy iz ee ja ae">
-                <div class="an ao ir">
-                    <div class="je l ee jf">
-                        <div class="jg jh l">
-                            <div class="ht jb m n o fu ae cw jc jd">
-                                <img class="m n o fu ae ji jj jk" height="536" role="presentation" src="https://miro.medium.com/max/60/1*WW_A30vpOygHMMR-oIgFwQ.png?q=20" width="722"/>
+    <div class="kd">
+        <div class="t u">
+            <div class="ke kf kg kh ki kj y kk z kl ac ae">
+                <figure class="km kn ko kp kq kd kr ks paragraph-image">
+                    <div class="an ao ab">
+                        <div class="kw l ee kx">
+                            <div class="ky kz l">
+                                <div class="ht kt m n o fu ae cw ku kv">
+                                    <img class="m n o fu ae la lb lc" height="570" role="presentation" src="https://miro.medium.com/max/60/1*mNN7M1jsZqzGm0B1bsY-Og.png?q=20" width="886"/>
+                                </div>
+                                <img class="ht kt m n o fu ae ld" height="570" role="presentation" sizes="886px" srcset="https://miro.medium.com/max/552/1*mNN7M1jsZqzGm0B1bsY-Og.png 276w, https://miro.medium.com/max/1104/1*mNN7M1jsZqzGm0B1bsY-Og.png 552w, https://miro.medium.com/max/1280/1*mNN7M1jsZqzGm0B1bsY-Og.png 640w, https://miro.medium.com/max/1456/1*mNN7M1jsZqzGm0B1bsY-Og.png 728w, https://miro.medium.com/max/1632/1*mNN7M1jsZqzGm0B1bsY-Og.png 816w, https://miro.medium.com/max/1772/1*mNN7M1jsZqzGm0B1bsY-Og.png 886w" width="886"/>
+                                <noscript>
+                                    <img class="m n o fu ae" height="570" role="presentation" sizes="886px" src="https://miro.medium.com/max/1772/1*mNN7M1jsZqzGm0B1bsY-Og.png" srcset="https://miro.medium.com/max/552/1*mNN7M1jsZqzGm0B1bsY-Og.png 276w, https://miro.medium.com/max/1104/1*mNN7M1jsZqzGm0B1bsY-Og.png 552w, https://miro.medium.com/max/1280/1*mNN7M1jsZqzGm0B1bsY-Og.png 640w, https://miro.medium.com/max/1456/1*mNN7M1jsZqzGm0B1bsY-Og.png 728w, https://miro.medium.com/max/1632/1*mNN7M1jsZqzGm0B1bsY-Og.png 816w, https://miro.medium.com/max/1772/1*mNN7M1jsZqzGm0B1bsY-Og.png 886w" width="886"/>
+                                </noscript>
                             </div>
-                            <img class="ht jb m n o fu ae jl" height="536" role="presentation" sizes="700px" srcset="https://miro.medium.com/max/552/1*WW_A30vpOygHMMR-oIgFwQ.png 276w, https://miro.medium.com/max/1104/1*WW_A30vpOygHMMR-oIgFwQ.png 552w, https://miro.medium.com/max/1280/1*WW_A30vpOygHMMR-oIgFwQ.png 640w, https://miro.medium.com/max/1400/1*WW_A30vpOygHMMR-oIgFwQ.png 700w" width="722"/>
-                            <noscript>
-                                <img class="m n o fu ae" height="536" role="presentation" sizes="700px" src="https://miro.medium.com/max/1444/1*WW_A30vpOygHMMR-oIgFwQ.png" srcset="https://miro.medium.com/max/552/1*WW_A30vpOygHMMR-oIgFwQ.png 276w, https://miro.medium.com/max/1104/1*WW_A30vpOygHMMR-oIgFwQ.png 552w, https://miro.medium.com/max/1280/1*WW_A30vpOygHMMR-oIgFwQ.png 640w, https://miro.medium.com/max/1400/1*WW_A30vpOygHMMR-oIgFwQ.png 700w" width="722"/>
-                            </noscript>
                         </div>
                     </div>
-                </div>
+                    <figcaption class="le he lf an ao lg lh cg li lj dn du">Caption</figcaption>
+                </figure>
             </div>
-        </figure>
+        </div>
+    </div>
+    <div class="ap hl ae hm hn">
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="1623">…</p>
     </div>
 </section>,<section class="hf hg hh ae hi hj hk">
     <div class="ap hl ae hm hn">
-        <blockquote class="in io ip">
-            <p class="hw hx iq bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="321b">Operator priority</p>
-        </blockquote>
-        <figure class="is it iu iv iw ix an ao paragraph-image">
-            <div class="an ao jo">
-                <div class="je l ee jf">
-                    <div class="jp jh l">
-                        <div class="ht jb m n o fu ae cw jc jd">
-                            <img class="m n o fu ae ji jj jk" height="674" role="presentation" src="https://miro.medium.com/max/60/1*-Oj-C1WtzaHwGryem6WOsw.png?q=20" width="670"/>
-                        </div>
-                        <img class="ht jb m n o fu ae jl" height="674" role="presentation" sizes="670px" srcset="https://miro.medium.com/max/552/1*-Oj-C1WtzaHwGryem6WOsw.png 276w, https://miro.medium.com/max/1104/1*-Oj-C1WtzaHwGryem6WOsw.png 552w, https://miro.medium.com/max/1280/1*-Oj-C1WtzaHwGryem6WOsw.png 640w, https://miro.medium.com/max/1340/1*-Oj-C1WtzaHwGryem6WOsw.png 670w" width="670"/>
-                        <noscript>
-                            <img class="m n o fu ae" height="674" role="presentation" sizes="670px" src="https://miro.medium.com/max/1340/1*-Oj-C1WtzaHwGryem6WOsw.png" srcset="https://miro.medium.com/max/552/1*-Oj-C1WtzaHwGryem6WOsw.png 276w, https://miro.medium.com/max/1104/1*-Oj-C1WtzaHwGryem6WOsw.png 552w, https://miro.medium.com/max/1280/1*-Oj-C1WtzaHwGryem6WOsw.png 640w, https://miro.medium.com/max/1340/1*-Oj-C1WtzaHwGryem6WOsw.png 670w" width="670"/>
-                        </noscript>
-                    </div>
-                </div>
-            </div>
-        </figure>
+        <p class="hw hx bj bo b hy hz ia ib ic id ie if ig ih ii ij ik cd" id="57b2">CENTERED</p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="2030">
+            <strong class="bo il">Bold content</strong>
+        </p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="fec1">
+            <em class="ir">Italic content</em>
+        </p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="2395">
+            <a class="fn is it iu iv iw" href="http://www.google.com" rel="noopener nofollow" target="_blank">URL</a>
+        </p>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="67c8">
+            <a class="fn is it iu iv iw" href="http://www.google.com" rel="noopener nofollow" target="_blank">
+                <strong class="bo il">
+                    <em class="ir">Bold italic URL</em>
+                </strong>
+            </a>
+        </p>
+        <h1 class="ho hp bj cg ch ix iy iz ja jb jc jd je jf jg jh ji jj jk jl hs cd" id="7e07">Big title</h1>
+        <h2 class="jm hp bj cg ch jn jo jp jq jr js jt ju jv jw jx jy jz ka kb kc cd" id="52bb">Small title</h2>
+        <p class="hw hx bj bo b hy im ia in ic io ie ip ig iq ii ij ik cd" id="c41c">…</p>
     </div>
 </section>]

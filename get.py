@@ -7,7 +7,7 @@ import bs4
 from bs4 import BeautifulSoup
 import os
 import argparse 
-from series import Series
+from series import Series, Section, Content
 
 # Logging config 
 logging.basicConfig(level = logging.ERROR)
@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('url', help = 'URL of the medium series', type = str)
 args = parser.parse_args()
 
-url = args.url # https://medium.com/series/py-6c6c7d22788f
+url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
 log.info(f'series-url: {url}')
 
 # Medium series object
@@ -29,11 +29,19 @@ def get_series(url:str) -> None:
     html_doc = requests.get(url).text
     soup = BeautifulSoup(html_doc, 'html.parser')
     sections = soup.find_all('section')
-    s.name = sections[0].string # First section is the series title 
-    s.img_url = None # Hardcoded to none as it is not available 
+    #print(sections)
     for section in sections:
-        section.attrs = None # Remove attributes
-        log.debug(section)
+        if section.name == 'section': # This is the title section
+            s.name = section.string 
+            s.img_url = None # It is not available in the payload
+        section.attrs = None # Remove attributes of section element
+        section_obj = Section()
+        s.sections.append(section_obj)
+        content_obj = Content()
+        content_obj.text = section.string
+        #print(f'>>>>>> {section.get_text()}')
+        section_obj.contents.append(content_obj)
+        #log.debug(section)
         [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
         mkdwn = html2text.html2text(str(section))
         print(mkdwn) # Print to console
@@ -42,10 +50,10 @@ def get_series(url:str) -> None:
 # We keep srcset as this has all the image sizes
 # Convert srcset to src because html2text does not work with srcset 
 def make_attr_none(tag):
-    if tag.name == 'img': # For img tags
+    if tag.name == 'img' or tag.name == 'a': # For img and a tags
         # Get the dict of tag.attrs where attribute is srcset and the parent is a div
         # We use parent = div to filter out the img tags under noscript
-        tag.attrs = {k:v for k,v in tag.attrs.items() if k == 'srcset' and tag.parent.name == 'div'} 
+        tag.attrs = {k:v for k,v in tag.attrs.items() if (k == 'srcset' and tag.parent.name == 'div') or (k == 'href')} 
         if('srcset' in tag.attrs): 
             # Rename the srcset key to src
             tag.attrs['src'] = tag.attrs['srcset']
@@ -68,4 +76,4 @@ def make_attr_none(tag):
 
 if __name__ == '__main__':
     get_series(url)
-    print(s.to_json())
+    #print(s.pretty_print_json())
