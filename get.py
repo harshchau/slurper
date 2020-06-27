@@ -82,6 +82,7 @@ def get_contents(section_tag: bs4.element.Tag):
     for str in s:
         content = Content()
         content.text = str
+        content.type = 'text'
         contents.append(content)
 
     return contents
