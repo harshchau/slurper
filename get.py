@@ -31,20 +31,21 @@ def get_series(url:str) -> None:
     sections = soup.find_all('section')
     #print(sections)
     for section in sections:
+        # Clear attributes and generate mkdwn
+        section.attrs = None # Remove attributes of section element
+        [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
+        mkdwn = html2text.html2text(str(section))
+
+        # Generate Series object
         if section.name == 'section': # This is the title section
             s.name = section.string 
             s.img_url = None # It is not available in the payload
-        section.attrs = None # Remove attributes of section element
         section_obj = Section()
         s.sections.append(section_obj)
-        content_obj = Content()
-        content_obj.text = section.string
-        #print(f'>>>>>> {section.get_text()}')
-        section_obj.contents.append(content_obj)
+        section_obj.contents = get_contents(section)
         #log.debug(section)
-        [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
-        mkdwn = html2text.html2text(str(section))
-        print(mkdwn) # Print to console
+        
+        #print(mkdwn) # Print to console
 
 # Remove all HTML attributes except for img tags with srcset
 # We keep srcset as this has all the image sizes
@@ -74,6 +75,18 @@ def make_attr_none(tag):
         tag.attrs = None # Remove all attributes
     return tag
 
+
+def get_contents(section_tag: bs4.element.Tag):
+    contents = []
+    s = [ str for str in section_tag.strings]
+    for str in s:
+        content = Content()
+        content.text = str
+        contents.append(content)
+
+    return contents
+
+
 if __name__ == '__main__':
     get_series(url)
-    #print(s.pretty_print_json())
+    print(s.pretty_print_json())
