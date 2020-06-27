@@ -11,8 +11,15 @@ class Series:
     def __str__(self):
         return f'ID: {self.id}\nName: {self.name} \nImage URL: {self.img_url} \nSections: {self.sections}'
 
-    def to_json(self):
+    def to_json_str(self):
         return json.dumps(self, default=lambda o: o.__dict__)
+
+    def to_json(self):
+        return json.loads(json.dumps(self, default = lambda o: o.__dict__))
+
+    def pretty_print_json(self):
+        return json.dumps(json.loads(json.dumps(self, default = lambda o: o.__dict__)), indent = 4)
+
 
 class Section:
     def __init__(self) -> None:
@@ -49,9 +56,13 @@ def populate_test():
     section.contents.append(content)
     s.sections.append(section)
 
-    json_string = s.to_json()
-    json_object = json.loads(json_string)
+    json_string = s.to_json_str()
+    print(type(json_string))
+    json_object = s.to_json()
+    print(type(json_object))
     print(json_object)
+
+    print(s.pretty_print_json())
 
 
 
