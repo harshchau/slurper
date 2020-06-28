@@ -23,31 +23,40 @@ args = parser.parse_args()
 url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
 log.info(f'series-url: {url}')
 
-# Medium series object
-s = Series()
 
+
+'''
+Returns:
+Populated Series object
+
+Description:
+For a given url, populate the series object and return
+'''
 def get_series(url:str) -> None:
+    # Medium series object
+    s = Series()
+    # get html string
     html_doc = requests.get(url).text
+    # make some soup
     soup = BeautifulSoup(html_doc, 'html.parser')
-    #log.debug(soup)
+    # get all sections from the soup
     sections = soup.find_all('section')
-    #log.debug(sections)
+    log.debug(f'Sections > {sections}')
+    # for all sections, clean html attributes and generate markdown
     for section in sections:
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
         [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
-        mkdwn = html2text.html2text(str(section))
-
-        #log.debug(section)
+        section_obj = Section()
+        section_obj.mkdwn = html2text.html2text(str(section))
         # Generate Series object
         if section.name == 'section': # This is the title section
             s.name = section.string 
             s.img_url = None # It is not available in the payload
-        section_obj = Section()
         s.sections.append(section_obj)
         section_obj.contents = get_contents(section)
         
-        #print(mkdwn) # Print to console
+    return s
 
 '''
 Returns:
@@ -158,5 +167,5 @@ def get_img_urls(section_tag: bs4.element.Tag) -> dict:
 
 
 if __name__ == '__main__':
-    get_series(url)
-    print(s.pretty_print_json())
+    s = get_series(url)
+    #print(s.pretty_print_json())
