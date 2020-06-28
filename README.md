@@ -1,6 +1,6 @@
 # Medium series to markdown
 
-This module takes a medium series and converts
+This module takes a medium series or a medium post and converts
 it to markdown. This is not meant for either Medium RSS feeds or regular Medium posts or publications.
 A sample medium series is https://medium.com/series/sample-3d219d98b481 
 
