@@ -30,13 +30,14 @@ def get_series(url:str) -> None:
     soup = BeautifulSoup(html_doc, 'html.parser')
     #log.debug(soup)
     sections = soup.find_all('section')
-    #print(sections)
+    #log.debug(sections)
     for section in sections:
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
         [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
         mkdwn = html2text.html2text(str(section))
 
+        #log.debug(section)
         # Generate Series object
         if section.name == 'section': # This is the title section
             s.name = section.string 
@@ -44,12 +45,12 @@ def get_series(url:str) -> None:
         section_obj = Section()
         s.sections.append(section_obj)
         section_obj.contents = get_contents(section)
-        #log.debug(section)
         
         #print(mkdwn) # Print to console
 
 # Remove all HTML attributes except for img tags with srcset
 # We keep srcset as this has all the image sizes
+# Pick the biggest image size (assuming the last image in the srcset is the biggest)
 # Convert srcset to src because html2text does not work with srcset 
 def make_attr_none(tag):
     if tag.name == 'img' or tag.name == 'a': # For img and a tags
@@ -79,10 +80,12 @@ def make_attr_none(tag):
 
 def get_contents(section_tag: bs4.element.Tag):
     contents = []
+    #log.debug(section_tag)
     s = [ str for str in section_tag.strings]
     for str in s:
         content = Content()
         content.text = str
+        #log.debug(content.text)
         if str.parent.name == 'figcaption': content.type = 'caption'
         elif str.parent.name == 'a': 
             content.type = 'url'
@@ -90,7 +93,25 @@ def get_contents(section_tag: bs4.element.Tag):
         else: content.type = 'text'
         contents.append(content)
 
+    divs_with_img = find_position_of_image_in_content(section_tag)
+    for count, value in divs_with_img:
+        c = Content()
+        c.type = 'img'
+        c.text = None
+        c.url = 'URL'
+        contents.insert(count, c)
+
     return contents
+
+# For a given section tag iterate over children (immediate divs)
+# Filter it by divs that contain an img tag
+# Get an enumeration to get the index of which first level div under a section
+# contains an image tag. We will use this index to later insert images back into 
+# the contents list of a Section object
+def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> tuple:
+    divs_with_img = [(i, j) for i, j in enumerate(section_tag.children) if j.find('img')]
+
+    return divs_with_img
 
 
 if __name__ == '__main__':
