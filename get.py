@@ -17,15 +17,21 @@ logging.getLogger(__name__).setLevel(logging.DEBUG)
 # args config 
 parser = argparse.ArgumentParser()
 parser.add_argument('url', help = 'URL of the medium series', type = str)
+parser.add_argument('-j', '--json', help = 'Emit JSON', action = 'store_true')
+parser.add_argument('-m', '--markdown', help = 'Emit markdown for each section or post', action = 'store_true')
+parser.add_argument('-u', '--uber', help = 'Emite all content as single markdown', action = 'store_true')
 args = parser.parse_args()
 
 # source url
 url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
+
+emit_uber_mkdwn = args.uber    
+emit_mkdwn = args.markdown 
+emit_json = args.json 
+
 log.info(f'series-url: {url}')
 
-emit_uber_mkdwn = False 
-emit_mkdwn = True 
-emit_json = True 
+
 
 '''
 Returns:
@@ -35,6 +41,7 @@ Description:
 For a given url, populate the series object and return
 '''
 def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json = False) -> None:
+    log.info(f'Emitters: emit-uber-mkdwn={emit_uber_mkdwn}, emit_mkdwn={emit_mkdwn}, emit_json={emit_json}')
     # Medium series object
     s = Series()
     s.sections = []
@@ -44,23 +51,25 @@ def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json =
     soup = BeautifulSoup(html_doc, 'html.parser')
     # get all sections from the soup
     sections = soup.find_all('section')
-    #log.debug(f'Sections > {sections}')
     # for all sections, clean html attributes and generate markdown
-    for section in sections:
+    for cnt, section in enumerate(sections):
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
+        # Generate Series object values
+        if cnt == 0: # This is the title section
+            s.name = section.string 
+            s.img_url = None # It is not available in the payload
         section_obj = Section()
         # clean out non-required attrs
         [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
         # Add mkdwn data to sections if emit_mkdwn == True else add ""
-        section_obj.mkdwn = (html2text.html2text(str(section))) if emit_mkdwn else ''
-        # Generate Series object
-        if section.name == 'section': # This is the title section
-            s.name = section.string 
-            s.img_url = None # It is not available in the payload
-            # initialize Series -> Sections
+        section_obj.mkdwn = (html2text.html2text(str(section))) if emit_mkdwn or emit_uber_mkdwn else ''
+        # initialize Series -> Sections
         s.sections.append(section_obj)
         section_obj.contents = get_contents(section) if emit_json else []
+    
+    # populate uber markdown from markdown 
+    s = populate_uber_mkdwn(s) if emit_uber_mkdwn else s
     
     log.debug(f'Series > {s.pretty_print_json()}')
     return s
@@ -171,6 +180,20 @@ def get_img_urls(section_tag: bs4.element.Tag) -> dict:
             return_dict[k] = img_lst
         
     return return_dict
+
+
+def populate_uber_mkdwn(series: Series) -> Series:
+    m = ''
+    for s in series.sections:
+        m += s.mkdwn + '-----\n\n' # add horizontal ruler to markdown
+        if emit_mkdwn == False: 
+            s.mkdwn = ''
+            s = []
+
+    if emit_mkdwn == False: series.sections = []
+    series.uber_mkdwn = m
+
+    return series 
 
 
 if __name__ == '__main__':
