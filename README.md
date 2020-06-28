@@ -6,7 +6,7 @@ A sample medium series is https://medium.com/series/sample-3d219d98b481
 
 **Note**: Medium's support for RSS and the API is pretty limited. This module is based on a scraper
 
-## Usage
+## Setup 
 1. Clone the repository
 2. Set up your virtualenv
 `virtualenv medium-mkdwn`
@@ -17,7 +17,7 @@ A sample medium series is https://medium.com/series/sample-3d219d98b481
 
 
 
-## Setting up selenium
+## Setting up selenium 
 1. Download chromedriver following instructions on selenium's page 
 2. Move chromedriver to /usr/local/bin (on Mac)
 3. Add to path `export PATH=$PATH:/usr/local/bin >> ~/.profile`
