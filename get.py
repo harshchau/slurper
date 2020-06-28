@@ -35,7 +35,7 @@ def get_series(url:str) -> None:
     for section in sections:
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
-        [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
+        [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
         mkdwn = html2text.html2text(str(section))
 
         #log.debug(section)
@@ -49,13 +49,19 @@ def get_series(url:str) -> None:
         
         #print(mkdwn) # Print to console
 
-# Remove all HTML attributes except for img tags with srcset
-# We keep srcset as this has all the image sizes
-# Pick the biggest image size (assuming the last image in the srcset is the biggest)
-# Convert srcset to src because html2text does not work with srcset 
-def make_attr_none(tag):
+'''
+Returns:
+Tag after removing all html attributes except as described below
+
+Description:
+Remove all HTML attributes except for img tags with srcset
+We keep srcset as this has all the image sizes
+Pick the biggest image size (assuming the last image in the srcset is the biggest)
+Convert srcset to src because html2text does not work with srcset 
+'''
+def clean_html_attributes(tag: bs4.element.Tag):
     if tag.name == 'img' or tag.name == 'a': # For img and a tags
-        # Get the dict of tag.attrs where attribute is srcset and the parent is a div
+        # Get the dict of tag.attrs where attribute is srcset and the parent is a div OR tag is href
         # We use parent = div to filter out the img tags under noscript
         tag.attrs = {k:v for k,v in tag.attrs.items() if (k == 'srcset' and tag.parent.name == 'div') or (k == 'href')} 
         if('srcset' in tag.attrs): 
@@ -83,6 +89,8 @@ Returns:
 list of Series -> Section -> Content objects 
 
 Description:
+We need to get a list of content objects which contain text, img, caption and 
+href data from the section -> divs
 For a given section tag, get the list section -> contents populated with img, 
 text, caption and href
 '''
@@ -151,4 +159,4 @@ def get_img_urls(section_tag: bs4.element.Tag) -> dict:
 
 if __name__ == '__main__':
     get_series(url)
-    #print(s.pretty_print_json())
+    print(s.pretty_print_json())
