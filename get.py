@@ -81,9 +81,23 @@ def make_attr_none(tag):
 def get_contents(section_tag: bs4.element.Tag):
     contents = []
     #log.debug(section_tag)
-    divs = [ [str for str in div.strings] for cnt, div in enumerate(section_tag.children)]
-    for d in divs:
-        for str in d:
+    #print('\n')
+    #divs = [ cnt, div for cnt, div in enumerate(section_tag.children)]
+
+    img_dict = find_position_of_image_in_content(section_tag)
+    #print(img_dict)
+
+    for cnt, div in enumerate(section_tag.children):
+        #print(cnt, div)
+        #print('\n')
+        if cnt in img_dict.keys():
+            for i in img_dict[cnt]:
+                content = Content()
+                content.type = 'img'
+                content.text = None
+                content.url = i
+                contents.append(content)
+        for str in div.strings:
             content = Content()
             content.text = str
             #log.debug(content.text)
@@ -94,14 +108,6 @@ def get_contents(section_tag: bs4.element.Tag):
             else: content.type = 'text'
             contents.append(content)
 
-    divs_with_img = find_position_of_image_in_content(section_tag)
-    for count, value in divs_with_img:
-        c = Content()
-        c.type = 'img'
-        c.text = None
-        c.url = 'URL'
-        divs.insert(count, c)
-
     return contents
 
 # For a given section tag iterate over children (immediate divs)
@@ -109,10 +115,26 @@ def get_contents(section_tag: bs4.element.Tag):
 # Get an enumeration to get the index of which first level div under a section
 # contains an image tag. We will use this index to later insert images back into 
 # the contents list of a Section object
-def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> tuple:
+def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
     divs_with_img = [(i, j) for i, j in enumerate(section_tag.children) if j.find('img')]
+    #for c,v in divs_with_img:
+    #    print(type(v))
 
-    return divs_with_img
+    # img_dict is a dictionary of images keyed by their position in the div 
+    # belonging to a section. Each item in the img_dict can contain multiple img 
+    # urls if e.g. there are two images within the same div
+    img_dict = {cnt:value for cnt, value in divs_with_img}
+    return_dict = {}
+
+    for k,v in img_dict.items():
+        imgs = v.find_all('img')
+        img_lst = []
+        for i in imgs:
+            if i.get('src'):
+                img_lst.append(i.get('src'))
+            return_dict[k] = img_lst
+
+    return return_dict
 
 
 if __name__ == '__main__':
