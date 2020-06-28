@@ -24,4 +24,4 @@ This module takes a medium URL and can emit either markdown or JSON. Support for
 2. Move chromedriver to /usr/local/bin (on Mac)
 3. Add to path `export PATH=$PATH:/usr/local/bin >> ~/.profile`
 4. Remove from MacOS quarantine (thing that throws a message saying Apple cannot verify this application): `xattr -d com.apple.quarantine chromedriver`
-5. Run `chromedriver`. If you get sriver output to the console, it has been installed correctly
+5. Run `chromedriver`. If you get driver output to the console, it has been installed correctly
