@@ -4,7 +4,9 @@ This module takes a medium series or a medium post and converts
 it to markdown. This is not meant for either Medium RSS feeds or regular Medium posts or publications.
 A sample medium series is https://medium.com/series/sample-3d219d98b481 
 
-**Note**: Medium's support for RSS and the API is pretty limited. This module is based on a scraper 
+This module takes a medium URL and can emit either markdown or JSON
+
+**Note**: Medium's support for RSS and the API is pretty limited. This module is based on a scraper  
 
 ## Setup 
 1. Clone the repository
