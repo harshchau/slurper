@@ -78,19 +78,23 @@ def make_attr_none(tag):
         tag.attrs = None # Remove all attributes
     return tag
 
+'''
+Returns:
+list of Series -> Section -> Content objects 
 
+Description:
+For a given section tag, 
+'''
 def get_contents(section_tag: bs4.element.Tag):
+    # Init contants list to be returned
     contents = []
-    #log.debug(section_tag)
-    #print('\n')
-    #divs = [ cnt, div for cnt, div in enumerate(section_tag.children)]
-
-    img_dict = find_position_of_image_in_content(section_tag)
-    #print(img_dict)
-
+    # Get dict of img urls keyed by index of section -> div that contains them
+    img_dict = get_img_urls(section_tag)
+    # Enumerate and iterate over section -> div tags
     for cnt, div in enumerate(section_tag.children):
-        #print(cnt, div)
-        #print('\n')
+        # if enumeration counter exists in the img dict, get the list of img
+        # urls from the dict, create content objects and append to 
+        # section -> contents list
         if cnt in img_dict.keys():
             for i in img_dict[cnt]:
                 content = Content()
@@ -98,6 +102,8 @@ def get_contents(section_tag: bs4.element.Tag):
                 content.text = None
                 content.url = i
                 contents.append(content)
+        # For all text, captions or hrefs, create content objects and append to
+        # section -> contents list
         for str in div.strings:
             content = Content()
             content.text = str
@@ -126,7 +132,7 @@ Get an enumeration to get the index of which first level div under a section
 contains an image tag. We will use this index to later insert images back into 
 the contents list of a Section object
 '''
-def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
+def get_img_urls(section_tag: bs4.element.Tag) -> dict:
     # dict of section -> divs that contain an image
     img_dict = {i:j for i, j in enumerate(section_tag.children) if j.find('img')}
     # Initialize dict to be returned
@@ -145,4 +151,4 @@ def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
 
 if __name__ == '__main__':
     get_series(url)
-    print(s.pretty_print_json())
+    #print(s.pretty_print_json())
