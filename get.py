@@ -81,17 +81,18 @@ def make_attr_none(tag):
 def get_contents(section_tag: bs4.element.Tag):
     contents = []
     #log.debug(section_tag)
-    s = [ str for str in section_tag.strings]
-    for str in s:
-        content = Content()
-        content.text = str
-        #log.debug(content.text)
-        if str.parent.name == 'figcaption': content.type = 'caption'
-        elif str.parent.name == 'a': 
-            content.type = 'url'
-            content.url = str.parent.attrs['href']
-        else: content.type = 'text'
-        contents.append(content)
+    divs = [ [str for str in div.strings] for cnt, div in enumerate(section_tag.children)]
+    for d in divs:
+        for str in d:
+            content = Content()
+            content.text = str
+            #log.debug(content.text)
+            if str.parent.name == 'figcaption': content.type = 'caption'
+            elif str.parent.name == 'a': 
+                content.type = 'url'
+                content.url = str.parent.attrs['href']
+            else: content.type = 'text'
+            contents.append(content)
 
     divs_with_img = find_position_of_image_in_content(section_tag)
     for count, value in divs_with_img:
@@ -99,7 +100,7 @@ def get_contents(section_tag: bs4.element.Tag):
         c.type = 'img'
         c.text = None
         c.url = 'URL'
-        contents.insert(count, c)
+        divs.insert(count, c)
 
     return contents
 
