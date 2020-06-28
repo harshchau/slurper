@@ -23,7 +23,9 @@ args = parser.parse_args()
 url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
 log.info(f'series-url: {url}')
 
-
+emit_uber_mkdwn = False 
+emit_mkdwn = False 
+emit_json = False
 
 '''
 Returns:
@@ -32,7 +34,7 @@ Populated Series object
 Description:
 For a given url, populate the series object and return
 '''
-def get_series(url:str) -> None:
+def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json = False) -> None:
     # Medium series object
     s = Series()
     # get html string
@@ -46,16 +48,19 @@ def get_series(url:str) -> None:
     for section in sections:
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
-        [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
         section_obj = Section()
-        section_obj.mkdwn = html2text.html2text(str(section))
+        # clean out non-required attrs
+        [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
+        # Add mkdwn data to sections if emit_mkdwn == True else add ""
+        section_obj.mkdwn = (html2text.html2text(str(section))) if emit_mkdwn else ''
         # Generate Series object
         if section.name == 'section': # This is the title section
             s.name = section.string 
             s.img_url = None # It is not available in the payload
         s.sections.append(section_obj)
-        section_obj.contents = get_contents(section)
-        
+        section_obj.contents = get_contents(section) if emit_json else []
+    
+    log.debug(f'Series > {s.pretty_print_json()}')
     return s
 
 '''
@@ -168,4 +173,3 @@ def get_img_urls(section_tag: bs4.element.Tag) -> dict:
 
 if __name__ == '__main__':
     s = get_series(url)
-    #print(s.pretty_print_json())
