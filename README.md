@@ -14,7 +14,7 @@ This module takes a medium URL and can emit either markdown or JSON. Support for
 `virtualenv medium-mkdwn`
 `source medium-mkdwn/bin/activate`
 1. Run it and pipe the markdown to a file
-`python3 get.py > ~/Downloads/series.md`
+`python3 get.py https://medium.com/series/sample-3d219d98b481`
 
 
 
