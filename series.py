@@ -25,6 +25,7 @@ class Section:
     def __init__(self) -> None:
         self.id = str(uuid.uuid4())
         self.contents = []
+        self.mkdwn = None
     
     def __str__(self):
         return f'ID: {self.id}\nContents: {self.contents}'

@@ -23,39 +23,54 @@ args = parser.parse_args()
 url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
 log.info(f'series-url: {url}')
 
-# Medium series object
-s = Series()
 
+
+'''
+Returns:
+Populated Series object
+
+Description:
+For a given url, populate the series object and return
+'''
 def get_series(url:str) -> None:
+    # Medium series object
+    s = Series()
+    # get html string
     html_doc = requests.get(url).text
+    # make some soup
     soup = BeautifulSoup(html_doc, 'html.parser')
-    #log.debug(soup)
+    # get all sections from the soup
     sections = soup.find_all('section')
-    #log.debug(sections)
+    log.debug(f'Sections > {sections}')
+    # for all sections, clean html attributes and generate markdown
     for section in sections:
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
-        [make_attr_none(d) for d in section.descendants if d is not bs4.element.NavigableString]
-        mkdwn = html2text.html2text(str(section))
-
-        #log.debug(section)
+        [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
+        section_obj = Section()
+        section_obj.mkdwn = html2text.html2text(str(section))
         # Generate Series object
         if section.name == 'section': # This is the title section
             s.name = section.string 
             s.img_url = None # It is not available in the payload
-        section_obj = Section()
         s.sections.append(section_obj)
         section_obj.contents = get_contents(section)
         
-        #print(mkdwn) # Print to console
+    return s
 
-# Remove all HTML attributes except for img tags with srcset
-# We keep srcset as this has all the image sizes
-# Pick the biggest image size (assuming the last image in the srcset is the biggest)
-# Convert srcset to src because html2text does not work with srcset 
-def make_attr_none(tag):
+'''
+Returns:
+Tag after removing all html attributes except as described below
+
+Description:
+Remove all HTML attributes except for img tags with srcset
+We keep srcset as this has all the image sizes
+Pick the biggest image size (assuming the last image in the srcset is the biggest)
+Convert srcset to src because html2text does not work with srcset 
+'''
+def clean_html_attributes(tag: bs4.element.Tag):
     if tag.name == 'img' or tag.name == 'a': # For img and a tags
-        # Get the dict of tag.attrs where attribute is srcset and the parent is a div
+        # Get the dict of tag.attrs where attribute is srcset and the parent is a div OR tag is href
         # We use parent = div to filter out the img tags under noscript
         tag.attrs = {k:v for k,v in tag.attrs.items() if (k == 'srcset' and tag.parent.name == 'div') or (k == 'href')} 
         if('srcset' in tag.attrs): 
@@ -78,19 +93,26 @@ def make_attr_none(tag):
         tag.attrs = None # Remove all attributes
     return tag
 
+'''
+Returns:
+list of Series -> Section -> Content objects 
 
+Description:
+We need to get a list of content objects which contain text, img, caption and 
+href data from the section -> divs
+For a given section tag, get the list section -> contents populated with img, 
+text, caption and href
+'''
 def get_contents(section_tag: bs4.element.Tag):
+    # Init contants list to be returned
     contents = []
-    #log.debug(section_tag)
-    #print('\n')
-    #divs = [ cnt, div for cnt, div in enumerate(section_tag.children)]
-
-    img_dict = find_position_of_image_in_content(section_tag)
-    #print(img_dict)
-
+    # Get dict of img urls keyed by index of section -> div that contains them
+    img_dict = get_img_urls(section_tag)
+    # Enumerate and iterate over section -> div tags
     for cnt, div in enumerate(section_tag.children):
-        #print(cnt, div)
-        #print('\n')
+        # if enumeration counter exists in the img dict, get the list of img
+        # urls from the dict, create content objects and append to 
+        # section -> contents list
         if cnt in img_dict.keys():
             for i in img_dict[cnt]:
                 content = Content()
@@ -98,10 +120,11 @@ def get_contents(section_tag: bs4.element.Tag):
                 content.text = None
                 content.url = i
                 contents.append(content)
+        # For all text, captions or hrefs, create content objects and append to
+        # section -> contents list
         for str in div.strings:
             content = Content()
             content.text = str
-            #log.debug(content.text)
             if str.parent.name == 'figcaption': content.type = 'caption'
             elif str.parent.name == 'a': 
                 content.type = 'url'
@@ -126,7 +149,7 @@ Get an enumeration to get the index of which first level div under a section
 contains an image tag. We will use this index to later insert images back into 
 the contents list of a Section object
 '''
-def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
+def get_img_urls(section_tag: bs4.element.Tag) -> dict:
     # dict of section -> divs that contain an image
     img_dict = {i:j for i, j in enumerate(section_tag.children) if j.find('img')}
     # Initialize dict to be returned
@@ -144,5 +167,5 @@ def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
 
 
 if __name__ == '__main__':
-    get_series(url)
-    print(s.pretty_print_json())
+    s = get_series(url)
+    #print(s.pretty_print_json())
