@@ -7,6 +7,7 @@ class Series:
         self.name = None 
         self.img_url = None 
         self.sections = []
+        self.uber_mkdwn = None
     
     def __str__(self):
         return f'ID: {self.id}\nName: {self.name} \nImage URL: {self.img_url} \nSections: {self.sections}'
