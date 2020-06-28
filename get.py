@@ -17,15 +17,21 @@ logging.getLogger(__name__).setLevel(logging.DEBUG)
 # args config 
 parser = argparse.ArgumentParser()
 parser.add_argument('url', help = 'URL of the medium series', type = str)
+parser.add_argument('-j', '--json', help = 'Emit JSON', action = 'store_true')
+parser.add_argument('-m', '--markdown', help = 'Emit markdown for each section or post', action = 'store_true')
+parser.add_argument('-u', '--uber', help = 'Emite all content as single markdown', action = 'store_true')
 args = parser.parse_args()
 
 # source url
 url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
+
+emit_uber_mkdwn = args.uber    
+emit_mkdwn = args.markdown 
+emit_json = args.json 
+
 log.info(f'series-url: {url}')
 
-emit_uber_mkdwn = True 
-emit_mkdwn = False 
-emit_json = False 
+
 
 '''
 Returns:
@@ -184,7 +190,7 @@ def populate_uber_mkdwn(series: Series) -> Series:
             s.mkdwn = ''
             s = []
 
-    series.sections = []
+    if emit_mkdwn == False: series.sections = []
     series.uber_mkdwn = m
 
     return series 
