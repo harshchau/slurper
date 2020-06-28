@@ -28,6 +28,7 @@ s = Series()
 def get_series(url:str) -> None:
     html_doc = requests.get(url).text
     soup = BeautifulSoup(html_doc, 'html.parser')
+    #log.debug(soup)
     sections = soup.find_all('section')
     #print(sections)
     for section in sections:
