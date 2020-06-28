@@ -6,7 +6,8 @@ class Series:
         self.id = str(uuid.uuid4())
         self.name = None 
         self.img_url = None 
-        self.sections = []
+        self.sections = None 
+        self.uber_mkdwn = None
     
     def __str__(self):
         return f'ID: {self.id}\nName: {self.name} \nImage URL: {self.img_url} \nSections: {self.sections}'
@@ -24,7 +25,7 @@ class Series:
 class Section:
     def __init__(self) -> None:
         self.id = str(uuid.uuid4())
-        self.contents = []
+        self.contents = None 
         self.mkdwn = None
     
     def __str__(self):
