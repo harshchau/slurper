@@ -24,8 +24,8 @@ url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
 log.info(f'series-url: {url}')
 
 emit_uber_mkdwn = False 
-emit_mkdwn = False 
-emit_json = False
+emit_mkdwn = True 
+emit_json = True 
 
 '''
 Returns:
@@ -37,13 +37,14 @@ For a given url, populate the series object and return
 def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json = False) -> None:
     # Medium series object
     s = Series()
+    s.sections = []
     # get html string
     html_doc = requests.get(url).text
     # make some soup
     soup = BeautifulSoup(html_doc, 'html.parser')
     # get all sections from the soup
     sections = soup.find_all('section')
-    log.debug(f'Sections > {sections}')
+    #log.debug(f'Sections > {sections}')
     # for all sections, clean html attributes and generate markdown
     for section in sections:
         # Clear attributes and generate mkdwn
@@ -57,6 +58,7 @@ def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json =
         if section.name == 'section': # This is the title section
             s.name = section.string 
             s.img_url = None # It is not available in the payload
+            # initialize Series -> Sections
         s.sections.append(section_obj)
         section_obj.contents = get_contents(section) if emit_json else []
     
@@ -172,4 +174,4 @@ def get_img_urls(section_tag: bs4.element.Tag) -> dict:
 
 
 if __name__ == '__main__':
-    s = get_series(url)
+    s = get_series(url, emit_uber_mkdwn, emit_mkdwn, emit_json)
