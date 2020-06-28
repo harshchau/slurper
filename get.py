@@ -83,7 +83,8 @@ Returns:
 list of Series -> Section -> Content objects 
 
 Description:
-For a given section tag, 
+For a given section tag, get the list section -> contents populated with img, 
+text, caption and href
 '''
 def get_contents(section_tag: bs4.element.Tag):
     # Init contants list to be returned
@@ -107,7 +108,6 @@ def get_contents(section_tag: bs4.element.Tag):
         for str in div.strings:
             content = Content()
             content.text = str
-            #log.debug(content.text)
             if str.parent.name == 'figcaption': content.type = 'caption'
             elif str.parent.name == 'a': 
                 content.type = 'url'
