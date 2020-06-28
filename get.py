@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('url', help = 'URL of the medium series', type = str)
 args = parser.parse_args()
 
+# source url
 url = args.url # Sample URL > https://medium.com/series/sample-3d219d98b481
 log.info(f'series-url: {url}')
 
@@ -110,22 +111,27 @@ def get_contents(section_tag: bs4.element.Tag):
 
     return contents
 
-# For a given section tag iterate over children (immediate divs)
-# Filter it by divs that contain an img tag
-# Get an enumeration to get the index of which first level div under a section
-# contains an image tag. We will use this index to later insert images back into 
-# the contents list of a Section object
+'''
+Returns: 
+A dict with key = index of the section -> div (div child of section)
+and value = <list> of image urls
+
+Description:
+We need to find the index of the section -> divs that contain images so these can 
+be inserted back into the contents list of Series -> Section object 
+
+For a given section tag iterate over children (immediate divs)
+Filter it by divs that contain an img tag
+Get an enumeration to get the index of which first level div under a section
+contains an image tag. We will use this index to later insert images back into 
+the contents list of a Section object
+'''
 def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
-    divs_with_img = [(i, j) for i, j in enumerate(section_tag.children) if j.find('img')]
-    #for c,v in divs_with_img:
-    #    print(type(v))
-
-    # img_dict is a dictionary of images keyed by their position in the div 
-    # belonging to a section. Each item in the img_dict can contain multiple img 
-    # urls if e.g. there are two images within the same div
-    img_dict = {cnt:value for cnt, value in divs_with_img}
+    # dict of section -> divs that contain an image
+    img_dict = {i:j for i, j in enumerate(section_tag.children) if j.find('img')}
+    # Initialize dict to be returned
     return_dict = {}
-
+    # Filter img_dict, strip everything else but the img urls and add to return_dict
     for k,v in img_dict.items():
         imgs = v.find_all('img')
         img_lst = []
@@ -133,7 +139,7 @@ def find_position_of_image_in_content(section_tag: bs4.element.Tag) -> dict:
             if i.get('src'):
                 img_lst.append(i.get('src'))
             return_dict[k] = img_lst
-
+        
     return return_dict
 
 
