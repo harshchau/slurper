@@ -46,19 +46,19 @@ def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json =
     # get all sections from the soup
     sections = soup.find_all('section')
     # for all sections, clean html attributes and generate markdown
-    for section in sections:
+    for cnt, section in enumerate(sections):
         # Clear attributes and generate mkdwn
         section.attrs = None # Remove attributes of section element
+        # Generate Series object values
+        if cnt == 0: # This is the title section
+            s.name = section.string 
+            s.img_url = None # It is not available in the payload
         section_obj = Section()
         # clean out non-required attrs
         [clean_html_attributes(d) for d in section.descendants if d is not bs4.element.NavigableString]
         # Add mkdwn data to sections if emit_mkdwn == True else add ""
         section_obj.mkdwn = (html2text.html2text(str(section))) if emit_mkdwn or emit_uber_mkdwn else ''
-        # Generate Series object
-        if section.name == 'section': # This is the title section
-            s.name = section.string 
-            s.img_url = None # It is not available in the payload
-            # initialize Series -> Sections
+        # initialize Series -> Sections
         s.sections.append(section_obj)
         section_obj.contents = get_contents(section) if emit_json else []
     
@@ -179,7 +179,7 @@ def get_img_urls(section_tag: bs4.element.Tag) -> dict:
 def populate_uber_mkdwn(series: Series) -> Series:
     m = ''
     for s in series.sections:
-        m += s.mkdwn + '-----' # add horizontal ruler to markdown
+        m += s.mkdwn + '-----\n\n' # add horizontal ruler to markdown
         if emit_mkdwn == False: 
             s.mkdwn = ''
             s = []
