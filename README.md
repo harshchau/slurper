@@ -15,9 +15,9 @@ This module takes a medium URL and can emit either markdown or JSON. Support for
 - `python3 -m venv env`
 - `source env/bin/activate`
 3. Install packages 
-`pip install -r requirements.txt`
+- `pip install -r requirements.txt`
 4. Run it and pipe the markdown to a file
-`python3 medium-harvester.py https://medium.com/series/sample-3d219d98b481`
+- `python3 medium-harvester.py https://medium.com/series/sample-3d219d98b481`
 
 
 
