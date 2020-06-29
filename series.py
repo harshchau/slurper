@@ -1,6 +1,26 @@
 import json
 import uuid 
 
+'''
+Domain model for medium-harvester.
+The structure is:
+
+- Series            # base object
+    id              # id 
+    name            # name or title 
+    img_url         # bakground image of medium series if available
+    uber_mkdwn      # Markdown representing the entire post in one place
+    - Section       # list of section objects denoted by section in the HTML. A section is either a page in series or <placeholder> in a post
+        id          # id
+        mkdwn       # markdown for a particular section 
+        - Content   # content object. Typ[ically this is a text instance in a section e.g. one paragraph in a post
+        id          # id
+        type        # text, img or url 
+        text        # text
+        url         # url in case of imge or href 
+
+'''
+
 class Series:
     def __init__(self) -> None:
         self.id = str(uuid.uuid4())
