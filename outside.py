@@ -1,4 +1,4 @@
-from get import get_series
+from harvester import get_series
 import logging 
 
 '''
