@@ -21,3 +21,9 @@ elements = browser.find_elements_by_tag_name('section')
 last_element = elements[-1]
 html = last_element.get_attribute('outerHTML')
 print('Last >>>>> ', html)
+
+a = last_element.click()
+elements = browser.find_elements_by_tag_name('section')
+last_element = elements[-1]
+html = last_element.get_attribute('outerHTML')
+print('Last >>>>> ', html)
