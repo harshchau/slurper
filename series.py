@@ -5,7 +5,8 @@ import uuid
 Domain model for medium-harvester.
 The structure is:
 
-- Series            # base object
+--
+Series            # base object
     id              # id 
     name            # name or title 
     img_url         # bakground image of medium series if available
