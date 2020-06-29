@@ -19,8 +19,9 @@ chrome_options.add_argument("--headless")
 browser = webdriver.Chrome(chrome_options=chrome_options)
 
 # Get initial dataset 
-browser.get('https://medium.com/series/sample-3d219d98b481')
-elements = browser.find_elements_by_tag_name('section')
+def get_initial_payload(url: str):
+    browser.get('https://medium.com/series/sample-3d219d98b481')
+    elements = browser.find_elements_by_tag_name('section')
 
 first_element = elements[0]
 html = first_element.get_attribute('outerHTML')
@@ -48,3 +49,9 @@ elements = browser.find_elements_by_tag_name('section')
 a = elements[-1]
 
 print(')))))))))))) > ', a.get_attribute('outerHTML'))
+
+
+
+
+if __name__ == '__main__':
+    get_initial_payload()
