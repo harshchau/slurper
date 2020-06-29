@@ -16,13 +16,13 @@ This module takes a medium URL and can emit either markdown or JSON. Support for
 - `source env/bin/activate`
 3. Install packages 
 - `pip install -r requirements.txt`
-4. Run it and pipe the markdown to a file
+4. Run it 
 - `python3 medium-harvester.py https://medium.com/series/sample-3d219d98b481`
 
 
 
 
-## Setting up selenium 
+## Setting up selenium (optional if you don't want to follow the result sets al the way to the end)
 1. Download chromedriver following instructions on selenium's page 
 2. Move chromedriver to /usr/local/bin (on Mac)
 3. Add to path `export PATH=$PATH:/usr/local/bin >> ~/.profile`
