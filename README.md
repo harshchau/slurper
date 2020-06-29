@@ -25,6 +25,10 @@ This module takes a medium URL and can emit either markdown or JSON. Support for
 ## Setting up selenium (optional if you don't want to follow the result sets al the way to the end)
 1. Download chromedriver following instructions on selenium's page 
 2. Move chromedriver to /usr/local/bin (on Mac)
-3. Add to path `export PATH=$PATH:/usr/local/bin >> ~/.profile`
-4. Remove from MacOS quarantine (thing that throws a message saying Apple cannot verify this application): `xattr -d com.apple.quarantine chromedriver`
-5. Run `chromedriver`. If you get driver output to the console, it has been installed correctly
+3. Add to path 
+- `export PATH=$PATH:/usr/local/bin >> ~/.profile`
+4. Remove from MacOS quarantine (thing that throws a message saying Apple cannot verify this application): 
+- `xattr -d com.apple.quarantine chromedriver`
+5. Run 
+- `chromedriver` 
+If you get driver output to the console, it has been installed correctly
