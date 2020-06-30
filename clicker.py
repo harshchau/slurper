@@ -54,9 +54,11 @@ def get_element_as_text(element):
 
 if __name__ == '__main__':
     elems = get_initial_payload('https://medium.com/series/sample-3d219d98b481')
-    elems2 = iterate_a(elems)
-    #print(elems2[-4].get_attribute('outerHTML'))
-    for c,e in enumerate(elems2):
+    text_elements = [get_element_as_text(e) for e in elems]
+    elems_2 = iterate_a(elems)
+    text_elements_2 = [get_element_as_text(e) for e in elems_2]
+    text_elements.extend(text_elements_2)
+    for c,e in enumerate(text_elements):
         try:
             log.debug(f'{c} > {get_element_as_text(e)}')
         except Exception as error:
