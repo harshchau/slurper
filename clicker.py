@@ -3,55 +3,55 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 
 '''
-Use a headless browser to navigate a series or post and get the entire dataset.
+Use a headless browser to navigate a series or post and get the entire dataset
+Steps:
+    # Set up headless browser
+    # Get initial dataset
+    # Click on last element to get the next 
+    # Add the newly received element to the initial dataset 
+    # Repeat 
 '''
-
-# Set up headless browser
-# Get initial dataset
-# Click on last element to get the next 
-# Add the newly received element to the initial dataset 
-# Repeat 
-
 
 # Set up headless browser 
 chrome_options = webdriver.ChromeOptions() 
 chrome_options.add_argument("--headless") 
 browser = webdriver.Chrome(chrome_options=chrome_options)
 
+elements = []
+
 # Get initial dataset 
-def get_initial_payload(url: str):
+def get_initial_payload():
     browser.get('https://medium.com/series/sample-3d219d98b481')
     elements = browser.find_elements_by_tag_name('section')
 
-first_element = elements[0]
-html = first_element.get_attribute('outerHTML')
-print('FIRST >>>>> ', html)
+    return elements
 
-last_element = elements[-1]
-html = last_element.get_attribute('outerHTML')
-print('Last >>>>> ', html)
+def iterate(elements: list, last_len = len(elements)):
+    if last_len == len(elements): 
+        return elements
+    else:
+        curr_len = len(elements)
+        click(get_last_element(elements))
+        e = get_last_element(elements)
+        print_element(e)
+        iterate(elements, curr_len)
 
-print('CLICK on > ', first_element.get_attribute('outerHTML'))
-a = first_element.click()
-elements = browser.find_elements_by_tag_name('section')
-last_element = elements[-1]
-html = last_element.get_attribute('outerHTML')
-print('Latest >>>>> ', html)
-#elements.append(last_element)
+    #e = get_last_element(elements)
+    #click(e)
+    #e = get_last_element(elements)
+    #print_element(e)
 
-#print('LAST ELEMENT FROM ELEMENTS >>>>> ', elements[-1].get_attribute('outerHTML'))
+def click(element):
+    e = element.find_elements_by_tag_name('div')[-1]
+    action = ActionChains(browser)
+    action.move_to_element(e).click().perform()
 
-e = last_element.find_element_by_id('be83')
-action = ActionChains(browser)
-action.move_to_element(e).click().perform()
+def get_last_element(elements):
+    return browser.find_elements_by_tag_name('section')[-1]
 
-elements = browser.find_elements_by_tag_name('section')
-a = elements[-1]
-
-print(')))))))))))) > ', a.get_attribute('outerHTML'))
-
-
+def print_element(element: list):
+    print(element.get_attribute('outerHTML'))
 
 
 if __name__ == '__main__':
-    get_initial_payload()
+    elements = iterate(get_initial_payload())
