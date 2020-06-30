@@ -33,7 +33,7 @@ def get_initial_payload(url: str):
 
     return elements
 
-def iterate_a(element_list: list) -> list:
+def iterate_a(element_list: list, text_element_list: list = []) -> list:
     if element_list[-1] == element_list[-2]: 
         log.debug(f'ENDING ..... found {len(element_list)} elements')
 
@@ -42,12 +42,13 @@ def iterate_a(element_list: list) -> list:
         # element_list. In other words, we will add the last element to the 
         # list and then compare to previous element in the next step. This 
         # comparison then tells us whether or not thr elements are equal
-        return element_list[:-1]
+        return element_list[:-1], text_element_list[:-1]
     else:
         click(element_list[-1])
         element_list.append(browser.find_elements_by_tag_name('section')[-1])
-        
-        return iterate_a(element_list)
+        text_element_list.append(get_element_as_text(element_list[-1]))
+
+        return iterate_a(element_list, text_element_list)
 
 def click(element):
     e = element.find_elements_by_tag_name('div')[-1]
@@ -61,7 +62,7 @@ def get_element_as_text(element):
     except selenium.common.exceptions.StaleElementReferenceException as error:
         # Just log and don't take action as the text for stale elements has been
         # captured in the text_element list 
-        log.error(error)
+        log.error(f'IGNORE > {error.msg}')
 
     return s
 
@@ -69,15 +70,10 @@ def get_content():
     elems = get_initial_payload('https://medium.com/series/sample-3d219d98b481')
     text_elements = [get_element_as_text(e) for e in elems]
     #log.debug(text_elements)
-    elems_2 = iterate_a(elems)
-    text_elements_2 = [get_element_as_text(e) for e in elems_2]
-    #log.debug(text_elements_2)
-    text_elements.extend(text_elements_2)
-    #for e in text_elements: log.debug(e)
+    elems, text_elements = iterate_a(elems, text_elements)
+    log.info(f'Found {len(text_elements)}, {len(elems)} elements')
 
     return text_elements
 
 if __name__ == '__main__':
     get_content()
-
-# Add text elements to text list inline while parsing html. These might become stale again 
