@@ -1,3 +1,5 @@
+### pre-release
+
 # Harvest text data from posts
 
 This module takes a URL ( https://medium.com/series/sample-3d219d98b481 ) and emits either JSON or markdown as specified in the module
