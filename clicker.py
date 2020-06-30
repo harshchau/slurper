@@ -1,3 +1,4 @@
+import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
@@ -36,7 +37,12 @@ def iterate_a(element_list: list) -> list:
     if element_list[-1] == element_list[-2]: 
         log.debug(f'ENDING ..... found {len(element_list)} elements')
 
-        return element_list
+        # Drop the last element before returning because when the else reaches 
+        # the end of the content, it still add the last element to the 
+        # element_list. In other words, we will add the last element to the 
+        # list and then compare to previous element in the next step. This 
+        # comparison then tells us whether or not thr elements are equal
+        return element_list[:-1]
     else:
         click(element_list[-1])
         element_list.append(browser.find_elements_by_tag_name('section')[-1])
@@ -49,18 +55,29 @@ def click(element):
     action.move_to_element(e).click().perform()
 
 def get_element_as_text(element):
-    return element.get_attribute('outerHTML')
+    s = None
+    try:
+        s = element.get_attribute('outerHTML')
+    except selenium.common.exceptions.StaleElementReferenceException as error:
+        # Just log and don't take action as the text for stale elements has been
+        # captured in the text_element list 
+        log.error(error)
 
+    return s
 
-if __name__ == '__main__':
+def get_content():
     elems = get_initial_payload('https://medium.com/series/sample-3d219d98b481')
     text_elements = [get_element_as_text(e) for e in elems]
+    #log.debug(text_elements)
     elems_2 = iterate_a(elems)
     text_elements_2 = [get_element_as_text(e) for e in elems_2]
+    #log.debug(text_elements_2)
     text_elements.extend(text_elements_2)
-    for c,e in enumerate(text_elements):
-        try:
-            log.debug(f'{c} > {get_element_as_text(e)}')
-        except Exception as error:
-            log.error(f'{c} > {error}')
-    #    print(get_element_as_text(e))
+    #for e in text_elements: log.debug(e)
+
+    return text_elements
+
+if __name__ == '__main__':
+    get_content()
+
+# Add text elements to text list inline while parsing html. These might become stale again 
