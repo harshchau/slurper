@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+import logging
 
 '''
 Use a headless browser to navigate a series or post and get the entire dataset
@@ -11,6 +12,11 @@ Steps:
     # Add the newly received element to the initial dataset 
     # Repeat 
 '''
+
+# Logging config 
+logging.basicConfig(level = logging.ERROR)
+log = logging.getLogger(__name__)
+logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 # Set up headless browser 
 chrome_options = webdriver.ChromeOptions() 
