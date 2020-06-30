@@ -23,41 +23,42 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless") 
 browser = webdriver.Chrome(chrome_options=chrome_options)
 
-elements = []
-
 # Get initial dataset 
-def get_initial_payload():
-    browser.get('https://medium.com/series/sample-3d219d98b481')
+def get_initial_payload(url: str):
+    log.debug(f'URL > {url}')
+    browser.get(url)
     elements = browser.find_elements_by_tag_name('section')
+    log.debug(f'Found {len(elements)} elements')
 
     return elements
 
-def iterate(elements: list, last_len = len(elements)):
-    if last_len == len(elements): 
-        return elements
-    else:
-        curr_len = len(elements)
-        click(get_last_element(elements))
-        e = get_last_element(elements)
-        print_element(e)
-        iterate(elements, curr_len)
+def iterate_a(element_list: list) -> list:
+    if element_list[-1] == element_list[-2]: 
+        log.debug(f'ENDING ..... found {len(element_list)} elements')
 
-    #e = get_last_element(elements)
-    #click(e)
-    #e = get_last_element(elements)
-    #print_element(e)
+        return element_list
+    else:
+        click(element_list[-1])
+        element_list.append(browser.find_elements_by_tag_name('section')[-1])
+        
+        return iterate_a(element_list)
 
 def click(element):
     e = element.find_elements_by_tag_name('div')[-1]
     action = ActionChains(browser)
     action.move_to_element(e).click().perform()
 
-def get_last_element(elements):
-    return browser.find_elements_by_tag_name('section')[-1]
-
-def print_element(element: list):
-    print(element.get_attribute('outerHTML'))
+def get_element_as_text(element):
+    return element.get_attribute('outerHTML')
 
 
 if __name__ == '__main__':
-    elements = iterate(get_initial_payload())
+    elems = get_initial_payload('https://medium.com/series/sample-3d219d98b481')
+    elems2 = iterate_a(elems)
+    #print(elems2[-4].get_attribute('outerHTML'))
+    for c,e in enumerate(elems2):
+        try:
+            log.debug(f'{c} > {get_element_as_text(e)}')
+        except Exception as error:
+            log.error(f'{c} > {error}')
+    #    print(get_element_as_text(e))
