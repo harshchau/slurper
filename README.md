@@ -16,7 +16,7 @@ This includes support for dynamically loaded content e.g. by clicking and scroll
 3. Install packages 
 - `pip install -r requirements.txt`
 4. Run it 
-- `python3 harvester.py https://medium.com/series/sample-3d219d98b481`
+- `python3 harvester.py https://medium.com/series/sample-3d219d98b481` 
 
 
 
