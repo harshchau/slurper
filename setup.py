@@ -12,7 +12,7 @@ setuptools.setup(
     long_description="A package to scrape public data sources",
     long_description_content_type="text/markdown",
     url="https://github.com/harshchau/slurper",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=('tests')),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
