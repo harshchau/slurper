@@ -1,7 +1,0 @@
-README.md
-setup.py
-slurper/__init__.py
-slurper.egg-info/PKG-INFO
-slurper.egg-info/SOURCES.txt
-slurper.egg-info/dependency_links.txt
-slurper.egg-info/top_level.txt
