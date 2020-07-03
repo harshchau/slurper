@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="slurper", # Replace with your own username
-    version="0.0.2",
+    version="0.0.4",
     author="Harsh Chaudhary",
     author_email="chaudhary.harsh@gmail.com",
     description="A package to scrape public data sources",
-    long_description=A package to scrape public data sources,
+    long_description="A package to scrape public data sources",
     long_description_content_type="text/markdown",
-    url="https://github.com/harshchau/slurp",
+    url="https://github.com/harshchau/slurper",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
