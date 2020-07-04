@@ -1,3 +1,7 @@
 env
 .vscode
 __pycache__
+slurper/bin
+slurper/include
+slurper/lib
+slurper/pyenv.cfg
