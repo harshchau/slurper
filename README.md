@@ -31,3 +31,11 @@ This includes support for dynamically loaded content e.g. by clicking and scroll
 5. Run 
 - `chromedriver` 
 If you get driver output to the console, it has been installed correctly
+
+## Pushing to PyPi test
+[Reference](https://packaging.python.org/tutorials/packaging-projects/)
+1. `python -m pip install --user --upgrade setuptools wheel`
+2. `python setup.py sdist bdist_wheel`
+3. `python3 -m pip install --user --upgrade twine`
+4. `python3 -m twine upload --repository testpypi dist/*`
+Use username = __token__ along with PyPi test token 
