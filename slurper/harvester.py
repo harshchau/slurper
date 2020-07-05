@@ -7,7 +7,7 @@ import bs4
 from bs4 import BeautifulSoup
 import os
 import argparse 
-from series import Series, Section, Content
+from .series import Series, Section, Content 
 
 # Logging config 
 logging.basicConfig(level = logging.ERROR)
