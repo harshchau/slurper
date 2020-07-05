@@ -5,3 +5,6 @@ slurper/bin
 slurper/include
 slurper/lib
 slurper/pyvenv.cfg
+build/
+dist/
+slurper.egg-info/
