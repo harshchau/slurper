@@ -16,7 +16,7 @@ logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 # args config 
 parser = argparse.ArgumentParser()
-parser.add_argument('url', help = 'URL of the medium series', type = str)
+parser.add_argument('-url', help = 'URL of the medium series', type = str)
 parser.add_argument('-j', '--json', help = 'Emit JSON', action = 'store_true')
 parser.add_argument('-m', '--markdown', help = 'Emit markdown for each section or post', action = 'store_true')
 parser.add_argument('-u', '--uber', help = 'Emite all content as single markdown', action = 'store_true')
@@ -40,7 +40,7 @@ Populated Series object
 Description:
 For a given url, populate the series object and return
 '''
-def get_series(url:str, emit_uber_mkdwn = False, emit_mkdwn = False, emit_json = False) -> None:
+def get_series(url:str, emit_json = False, emit_mkdwn = False, emit_uber_mkdwn = False) -> None:
     log.info(f'Emitters: emit-uber-mkdwn={emit_uber_mkdwn}, emit_mkdwn={emit_mkdwn}, emit_json={emit_json}')
     # Medium series object
     s = Series()
