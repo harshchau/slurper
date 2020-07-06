@@ -13,6 +13,12 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/harshchau/slurper",
     packages=setuptools.find_packages(exclude=('tests')),
+    install_requires = [
+        'requests',
+        'html2text',
+        'bs4',
+        'argparse'
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
