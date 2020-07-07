@@ -1,5 +1,6 @@
 import json
 import uuid 
+from json import JSONEncoder
 
 '''
 Domain model for medium-harvester.
@@ -42,6 +43,10 @@ class Series:
     def pretty_print_json(self):
         return json.dumps(json.loads(json.dumps(self, default = lambda o: o.__dict__)), indent = 4)
 
+class SeriesEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
 
 class Section:
     def __init__(self) -> None:
@@ -67,10 +72,11 @@ def populate_test():
     s.id = 1
     s.name = 'Series name'
     s.img_url = None 
-    # s.sections 
+    s.sections = []
 
     section = Section()
     section.id = 1
+    section.contents = []
 
     content = Content()
     content.id = 1
@@ -87,6 +93,8 @@ def populate_test():
     print(json_object)
 
     print(s.pretty_print_json())
+
+    print(f'>>>>>>> {SeriesEncoder().encode(s)}')
 
 
 
