@@ -8,3 +8,4 @@ slurper/pyvenv.cfg
 build/
 dist/
 slurper.egg-info/
+slurper-env 
