@@ -39,3 +39,10 @@ If you get driver output to the console, it has been installed correctly
 3. `python3 -m pip install --user --upgrade twine`
 4. `python3 -m twine upload --repository testpypi dist/*`
 Use username = __token__ along with PyPi test token 
+
+
+
+## TODO
+- bs4 multi-processor
+- co-routines 
+- Page SHA
