@@ -35,7 +35,7 @@ class Publication(scrapy.Spider):
         tags = self.tags(response)
         editors = self.editors(response)
         writers = self.writers(response)
-        #print(tags)
+        print(tags)
         #print(editors)
         #print(writers)
 
@@ -78,6 +78,8 @@ class Publication(scrapy.Spider):
                 break
             else:
                 tags[sibling.xpath('./a/text()').get()] = sibling.xpath('./a/@href').get()
+
+        tags = {for sibling in start_selector if stop_selector.get() != sibling.get()}
             
         return tags
 
