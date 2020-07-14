@@ -16,7 +16,7 @@ logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 # args config 
 parser = argparse.ArgumentParser()
-parser.add_argument('url', help = 'URL of the medium series', type = str)
+parser.add_argument('-url', help = 'URL of the medium series', type = str)
 parser.add_argument('-j', '--json', help = 'Emit JSON', action = 'store_true')
 parser.add_argument('-m', '--markdown', help = 'Emit markdown for each section or post', action = 'store_true')
 parser.add_argument('-u', '--uber', help = 'Emite all content as single markdown', action = 'store_true')
@@ -197,4 +197,5 @@ def populate_uber_mkdwn(series: Series) -> Series:
 
 
 if __name__ == '__main__':
-    s = get_series(url, emit_json, emit_mkdwn, emit_uber_mkdwn)
+    url = 'https://medium.com/series/sample-3d219d98b481'
+    s = get_series(url, True, emit_mkdwn, emit_uber_mkdwn)
