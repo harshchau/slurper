@@ -1,5 +1,7 @@
 import scrapy
 import logging
+from scrapy.crawler import CrawlerProcess
+#from lxml import etree
 
 '''
 Take a publication URL and extract 
@@ -79,10 +81,16 @@ class Publication(scrapy.Spider):
             else:
                 tags[sibling.xpath('./a/text()').get()] = sibling.xpath('./a/@href').get()
 
-        tags = {for sibling in start_selector if stop_selector.get() != sibling.get()}
+        #tags = {for sibling in start_selector if stop_selector.get() != sibling.get()}
             
         return tags
 
+if __name__ == '__main__':
+    process = CrawlerProcess({
+        
+    })
+    process.crawl(Publication)
+    process.start()
         
 
 
