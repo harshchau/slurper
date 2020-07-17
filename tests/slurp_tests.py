@@ -1,4 +1,4 @@
-from slurper import harvester
+from .slurper import harvester
 import logging
 
 '''
