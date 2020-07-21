@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="slurper", # Replace with your own username
-    version="0.0.5.11",
+    version="0.0.5.15",
     author="Harsh Chaudhary",
     author_email="chaudhary.harsh@gmail.com",
     description="A package to scrape public data sources",
@@ -17,12 +17,15 @@ setuptools.setup(
         'requests',
         'html2text',
         'bs4',
-        'argparse'
+        'argparse',
+        'requests-file',
+        'selenium',
+        'tldextract'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
 )
