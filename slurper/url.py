@@ -1,10 +1,11 @@
-import urllib 
-from urllib.parse import urlparse
+#import urllib 
+#from urllib.parse import urlparse
 from dataclasses import dataclass 
 from datetime import datetime
 from datetime import date
 import tldextract 
 from json import JSONEncoder
+import urllib.robotparser 
 
 
 '''
@@ -35,9 +36,12 @@ class URL:
 
 class url_parser:
 
+    '''
+        For the list of provided urls pop each url in order and send to process_url
+    '''
     def parse(self, *urls) -> list:
         ret = []
-        print('>>>>>', type(urls[0]))
+        #print('>>>>>', type(urls[0]))
         if(type(urls[0])) is not list:
             urls = list(urls) # Converting to list to access pop 
         else:
@@ -51,18 +55,26 @@ class url_parser:
 
         return ret
 
-
+    '''
+        For each url
+            check against robots.txt 
+            extract various parts
+    '''
     def process_url(self, url: str) -> URL:
         extract = tldextract.extract(url)
         subdomain = extract.subdomain
         domain = extract.domain 
-        tld = extract.suffix
-        hostname = '.'.join(extract[:3])
+        suffix = extract.suffix
+        hostname = '.'.join(part for part in extract if part)
         type = 'PUB' if subdomain else 'POST'
         time_requested = datetime.now().timestamp() * 1000
         requesting_user = None
 
-        url = URL(url, hostname, domain, subdomain, tld, type, time_requested, requesting_user)
+        #rp = urllib.robotparser.RobotFileParser()
+        #rp.set_url('https://' + hostname + '/robots.txt')
+        #rp.read()
+
+        url = URL(url, hostname, domain, subdomain, suffix, type, time_requested, requesting_user)
 
         return url
     
