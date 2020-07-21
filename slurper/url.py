@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from datetime import date
 import tldextract 
+from json import JSONEncoder
 
 
 '''
@@ -36,9 +37,14 @@ class url_parser:
 
     def parse(self, *urls) -> list:
         ret = []
-        urls = list(urls) # Converting to list to access pop 
+        print('>>>>>', type(urls[0]))
+        if(type(urls[0])) is not list:
+            urls = list(urls) # Converting to list to access pop 
+        else:
+            urls = urls[0]
+        print('>>>>>', urls)
         urls.reverse() # eversing to maintain order in which user sent the list as this will be reversed back during popping
-        print(type(urls), urls)
+        #print(type(urls), urls)
         while len(urls) > 0:
             #print(urls.pop())
             ret.append(self.process_url(urls.pop()))
@@ -53,12 +59,16 @@ class url_parser:
         tld = extract.suffix
         hostname = '.'.join(extract[:3])
         type = 'PUB' if subdomain else 'POST'
-        time_requested = datetime.now()
+        time_requested = datetime.now().timestamp() * 1000
         requesting_user = None
 
         url = URL(url, hostname, domain, subdomain, tld, type, time_requested, requesting_user)
 
         return url
+    
+class SeriesEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
         
 
 
@@ -66,6 +76,10 @@ if __name__ == "__main__":
 
     s1 = "https://marker.medium.com"
     s2 = "https://marker.com"
-    url = url_parser().parse(s1, s2)
+    l = []
+    l.append(s1)
+    l.append(s2)
+    url = url_parser().parse(l)
     print(url)
+    print(SeriesEncoder().encode(url))
 
