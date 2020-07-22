@@ -27,7 +27,7 @@ class URL:
     time_requested: datetime 
     requesting_user: str 
 
-class url_parser:
+class UrlParser:
 
     '''
         For the list of provided urls pop each url in order and send to process_url
@@ -89,6 +89,6 @@ if __name__ == "__main__":
     l = []
     l.append(s1)
     l.append(s2)
-    url = url_parser().parse(l)
+    url = UrlParser().parse(l)
     print(SeriesEncoder().encode(url))
 
