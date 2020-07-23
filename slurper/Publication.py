@@ -6,7 +6,7 @@ import logging
 import argparse
 from bs4 import BeautifulSoup
 import time
-from url import url_parser
+from Url import UrlParser
 from urllib.parse import urlparse
 
 '''
@@ -94,7 +94,7 @@ def get_urls(text_elements: list) -> list:
 
 def remove_author_urls(urls_list: list) -> list:
     ret = []
-    up = url_parser()
+    up = UrlParser()
     for u in urls_list:
         #url_parts = up.process_url(u)
         #print(u[u.index(url_parts.suffix):])
