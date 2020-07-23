@@ -6,8 +6,9 @@ import logging
 import argparse
 from bs4 import BeautifulSoup
 import time
-from Url import UrlParser
+from url import UrlProcessor
 from urllib.parse import urlparse
+from dataclasses import dataclass
 
 '''
 Use a headless browser to navigate a series or post and get the entire dataset
@@ -36,7 +37,7 @@ logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 
 
-class Publication:
+class PublicationProcessor:
 
     # Set up headless browser 
     chrome_options = webdriver.ChromeOptions() 
@@ -98,7 +99,7 @@ class Publication:
 
     def remove_author_urls(self, urls_list: list) -> list:
         ret = []
-        up = UrlParser()
+        up = UrlProcessor
         for u in urls_list:
             #url_parts = up.process_url(u)
             #print(u[u.index(url_parts.suffix):])
@@ -128,5 +129,5 @@ class Publication:
 if __name__ == '__main__':
     #url = 'https://medium.com/series/sample-3d219d98b481'
     url = 'https://marker.medium.com'
-    p = Publication()
+    p = PublicationProcessor()
     p.get_content(url)
