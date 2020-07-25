@@ -9,6 +9,8 @@ import time
 from url import UrlProcessor
 from urllib.parse import urlparse
 from dataclasses import dataclass
+import boto3
+import datetime
 
 '''
 Use a headless browser to navigate a series or post and get the entire dataset
@@ -35,7 +37,13 @@ logging.basicConfig(level = logging.ERROR)
 log = logging.getLogger(__name__)
 logging.getLogger(__name__).setLevel(logging.DEBUG)
 
-
+@dataclass
+class Publication:
+    url: str
+    dataset: () # featured, archive, meta data
+    featured: list # list of featured url's 
+    time_requested: datetime 
+    requesting_user: str 
 
 class PublicationProcessor:
 
@@ -130,4 +138,21 @@ if __name__ == '__main__':
     #url = 'https://medium.com/series/sample-3d219d98b481'
     url = 'https://marker.medium.com'
     p = PublicationProcessor()
-    p.get_content(url)
+    #p.get_content(url)
+    #dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    table = dynamodb.Table('publications_table')
+    response = table.put_item(
+       Item={
+            'url': 'google'
+        }
+    )
+
+    print(response)
+
+    try:
+        response = table.get_item(Key={'url': 'google'}) 
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print(response['Item'])
