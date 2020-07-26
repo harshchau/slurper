@@ -145,13 +145,20 @@ if __name__ == '__main__':
     log.info(len(urls))
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table('publications_table')
-    for u in urls:
-        response = table.put_item(
-        Item={
+    #for u in urls:
+    #    response = table.put_item(
+    #    Item={
+    #            'url': u
+    #        }
+    #    )
+    #    print(response)
+    with table.batch_writer() as writer:
+        for u in urls:
+            item = {
                 'url': u
             }
-        )
-        print(response)
+            response = writer.put_item(Item=item)
+            print(response)
 
     #try:
     #    response = table.get_item(Key={'url': 'google'}) 
