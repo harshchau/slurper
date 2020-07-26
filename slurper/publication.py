@@ -117,7 +117,7 @@ class PublicationProcessor:
 
         return ret  
 
-    def get_content(self, url: str): 
+    def get_post_urls(self, url: str): 
         elems = self.get_initial_payload(url)
         text_elements = [self.get_element_as_text(e) for e in elems]
         #log.info(f'Found {len(elems)} elements on inital run')
@@ -128,31 +128,34 @@ class PublicationProcessor:
         urls = []
         [urls.append(x) for x in self.get_urls(text_elements) if x not in urls] # Remove duplicates this way to maintain order of urls
         urls = self.remove_author_urls(urls)
-        for u in urls:
-            log.info(u)
-        log.debug(f'{len(urls)} urls found')
+        #for u in urls:
+        #    log.info(u)
+        #log.debug(f'{len(urls)} urls found')
 
-        return text_elements
+        return urls
 
 if __name__ == '__main__':
     #url = 'https://medium.com/series/sample-3d219d98b481'
     url = 'https://marker.medium.com'
     p = PublicationProcessor()
-    #p.get_content(url)
-    #dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
+    urls = p.get_post_urls(url)
+    for u in urls:
+        log.info(u)
+    log.info(type(urls))
+    log.info(len(urls))
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table('publications_table')
-    response = table.put_item(
-       Item={
-            'url': 'google'
-        }
-    )
+    for u in urls:
+        response = table.put_item(
+        Item={
+                'url': u
+            }
+        )
+        print(response)
 
-    print(response)
-
-    try:
-        response = table.get_item(Key={'url': 'google'}) 
-    except ClientError as e:
-        print(e.response['Error']['Message'])
-    else:
-        print(response['Item'])
+    #try:
+    #    response = table.get_item(Key={'url': 'google'}) 
+    #except ClientError as e:
+    #    print(e.response['Error']['Message'])
+    #else:
+    #    print(response['Item'])
