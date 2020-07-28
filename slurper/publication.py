@@ -157,8 +157,7 @@ if __name__ == '__main__':
             item = {
                 'url': u
             }
-            response = writer.put_item(Item=item)
-            print(response)
+            writer.put_item(Item=item)
 
     #try:
     #    response = table.get_item(Key={'url': 'google'}) 
