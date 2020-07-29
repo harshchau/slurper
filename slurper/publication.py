@@ -6,11 +6,12 @@ import logging
 import argparse
 from bs4 import BeautifulSoup
 import time
-from url import UrlProcessor
+from .url import UrlProcessor
 from urllib.parse import urlparse
 from dataclasses import dataclass
 import boto3
 import datetime
+#import chromedriver_binary # adds chromedriver_binary to the PATH
 
 '''
 Use a headless browser to navigate a series or post and get the entire dataset
