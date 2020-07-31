@@ -50,7 +50,13 @@ class PublicationProcessor:
 
     # Set up headless browser 
     chrome_options = webdriver.ChromeOptions() 
-    chrome_options.add_argument("--headless") 
+#    chrome_options.add_argument("--headless") 
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_experimental_option("excludeSwitches",["ignore-certificate-errors"])
+    chrome_options.headless = True 
+    chrome_options.binary_location = '/var/task/lib/headless-chromium'
+#    browser = webdriver.Chrome(options=chrome_options,executable_path='/Users/harsh/git/slurper/slurper-env/lib/python3.8/site-packages/chromedriver_binary/chromedriver')
     browser = webdriver.Chrome(options=chrome_options)
 
     # Get initial dataset 
