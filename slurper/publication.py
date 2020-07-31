@@ -6,7 +6,7 @@ import logging
 import argparse
 from bs4 import BeautifulSoup
 import time
-from .url import UrlProcessor
+from url import UrlProcessor
 from urllib.parse import urlparse
 from dataclasses import dataclass
 import boto3
@@ -55,7 +55,7 @@ class PublicationProcessor:
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_experimental_option("excludeSwitches",["ignore-certificate-errors"])
     chrome_options.headless = True 
-    chrome_options.binary_location = '/var/task/lib/headless-chromium'
+#    chrome_options.binary_location = '/var/task/lib/headless-chromium'
 #    browser = webdriver.Chrome(options=chrome_options,executable_path='/Users/harsh/git/slurper/slurper-env/lib/python3.8/site-packages/chromedriver_binary/chromedriver')
     browser = webdriver.Chrome(options=chrome_options)
 
