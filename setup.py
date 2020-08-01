@@ -14,13 +14,27 @@ setuptools.setup(
     url="https://github.com/harshchau/slurper",
     packages=setuptools.find_packages(exclude=('tests')),
     install_requires = [
-        'requests',
-        'html2text',
+        'beautifulsoup4',
         'bs4',
-        'argparse',
+        'cachetools',
+        'certifi',
+        'chardet',
+        'docutils',
+        'html2text',
+        'idna',
+        'jmespath',
+        'python-dateutil',
+        'reppy',
+        'requests',
         'requests-file',
         'selenium',
-        'tldextract'
+        'six',
+        'soupsieve',
+        'tldextract',
+        'urllib3'
+# boto3
+# botocore
+# s3transfer        
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
