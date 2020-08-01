@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="slurper", # Replace with your own username
-    version="0.0.5.22",
+    version="0.0.5.23",
     author="Harsh Chaudhary",
     author_email="chaudhary.harsh@gmail.com",
     description="A package to scrape public data sources",
