@@ -35,7 +35,8 @@ class UrlProcessor:
         For the list of provided urls pop each url in order and send to process_url
     '''
     def parse(self, *urls) -> list:
-        ret = []
+        ret = {}
+        parsed_urls = []
         error_urls = []
         #print('>>>>>', type(urls[0]))
         if(type(urls[0])) is not list:
@@ -50,14 +51,15 @@ class UrlProcessor:
             u = urls.pop()
             try:
                 if self.is_valid(u) is True:
-                    ret.append(self.process_url(u))
+                    parsed_urls.append(self.process_url(u))
                 else:
                     pass 
             except (errors.EmptyValueError, errors.CannotCoerceError, errors.InvalidURLError) as err:
-                print('Error url:', u)
                 error_urls.append(u)
 
-        return ret, error_urls
+        ret['parsed_urls'] = parsed_urls
+        ret['error_urls'] = error_urls
+        return ret
 
     '''
         For each url
@@ -115,6 +117,6 @@ if __name__ == "__main__":
     l.append(s3)
     l.append(s4)
     l.append(s5)
-    urls, errors_urls = UrlProcessor().parse(l)
-    print(SeriesEncoder().encode(urls), errors_urls)
+    urls = UrlProcessor().parse(l)
+    print(SeriesEncoder().encode(urls))
 
