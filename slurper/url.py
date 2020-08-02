@@ -56,6 +56,7 @@ class UrlProcessor:
                     pass 
             except (errors.EmptyValueError, errors.CannotCoerceError, errors.InvalidURLError) as err:
                 error_urls.append(u)
+                print(err)
 
         ret['parsed_urls'] = parsed_urls
         ret['error_urls'] = error_urls
