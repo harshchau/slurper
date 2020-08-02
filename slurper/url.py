@@ -5,6 +5,7 @@ import tldextract
 from json import JSONEncoder
 import requests
 from reppy.robots import Robots
+from validator_collection import validators, checkers, errors
 
 
 '''
@@ -35,6 +36,7 @@ class UrlProcessor:
     '''
     def parse(self, *urls) -> list:
         ret = []
+        error_urls = []
         #print('>>>>>', type(urls[0]))
         if(type(urls[0])) is not list:
             urls = list(urls) # Converting to list to access pop 
@@ -45,9 +47,17 @@ class UrlProcessor:
         #print(type(urls), urls)
         while len(urls) > 0:
             #print(urls.pop())
-            ret.append(self.process_url(urls.pop()))
+            u = urls.pop()
+            try:
+                if self.is_valid(u) is True:
+                    ret.append(self.process_url(u))
+                else:
+                    pass 
+            except (errors.EmptyValueError, errors.CannotCoerceError, errors.InvalidURLError) as err:
+                print('Error url:', u)
+                error_urls.append(u)
 
-        return ret
+        return ret, error_urls
 
     '''
         For each url
@@ -70,6 +80,15 @@ class UrlProcessor:
 
         return url
 
+    def is_valid(self, url: str) -> bool:
+        ret = False
+        try:
+            ret = True if validators.url(url) else False
+        except (errors.EmptyValueError, errors.CannotCoerceError, errors.InvalidURLError) as err:
+            raise err
+
+        return ret 
+    
     def can_crawl(self, url: str) -> bool:
         ret = False
         robots_url = Robots.robots_url(url)
@@ -86,10 +105,16 @@ class SeriesEncoder(JSONEncoder):
 if __name__ == "__main__":
 
     s1 = "https://marker.medium.com"
-    s2 = "https://medium.com"
+    s2 = "https://medium.com$$"
+    s3 = "https://www.google.com"
+    s4 = "kjfbjdnkvnh"
+    s5 = ''
     l = []
     l.append(s1)
     l.append(s2)
-    url = UrlProcessor().parse(l)
-    print(SeriesEncoder().encode(url))
+    l.append(s3)
+    l.append(s4)
+    l.append(s5)
+    urls, errors_urls = UrlProcessor().parse(l)
+    print(SeriesEncoder().encode(urls), errors_urls)
 
