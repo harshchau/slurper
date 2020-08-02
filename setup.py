@@ -31,7 +31,8 @@ setuptools.setup(
         'six',
         'soupsieve',
         'tldextract',
-        'urllib3'
+        'urllib3',
+        'validator_collection'
 # boto3
 # botocore
 # s3transfer        
