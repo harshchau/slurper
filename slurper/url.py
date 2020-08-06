@@ -81,7 +81,6 @@ class UrlProcessor:
         domain = extract.domain 
         suffix = extract.suffix
         hostname = '.'.join(part for part in extract if part)
-        print('>>>>>>>>>>>', domain, type(subdomain))
         url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
         time_requested = datetime.now().timestamp() * 1000
         requesting_user = None
