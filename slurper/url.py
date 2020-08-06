@@ -38,6 +38,7 @@ class UrlProcessor:
         ret = {}
         parsed_urls = []
         error_urls = []
+        ignored_urls = [] # URL's we won't be processing even if they are valid 
         #print('>>>>>', type(urls[0]))
         if(type(urls[0])) is not list:
             urls = list(urls) # Converting to list to access pop 
@@ -51,7 +52,11 @@ class UrlProcessor:
             u = urls.pop()
             try:
                 if self.is_valid(u) is True:
-                    parsed_urls.append(self.process_url(u))
+                    u = self.process_url(u)
+                    if u.url_type == 'PUB':
+                        parsed_urls.append(u)
+                    else:
+                        ignored_urls.append(u)
                 else:
                     pass 
             except (errors.EmptyValueError, errors.CannotCoerceError, errors.InvalidURLError) as err:
@@ -60,6 +65,7 @@ class UrlProcessor:
 
         ret['parsed_urls'] = parsed_urls
         ret['error_urls'] = error_urls
+        ret['ignored_urls'] = ignored_urls
         return ret
 
     '''
@@ -75,7 +81,8 @@ class UrlProcessor:
         domain = extract.domain 
         suffix = extract.suffix
         hostname = '.'.join(part for part in extract if part)
-        url_type = 'PUB' if subdomain else 'POST'
+        print('>>>>>>>>>>>', domain, type(subdomain))
+        url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
         time_requested = datetime.now().timestamp() * 1000
         requesting_user = None
 
@@ -108,9 +115,9 @@ class SeriesEncoder(JSONEncoder):
 if __name__ == "__main__":
 
     s1 = "https://marker.medium.com"
-    s2 = "https://medium.com$$"
+    s2 = "https://medium.com"
     s3 = "https://www.google.com"
-    s4 = "kjfbjdnkvnh"
+    s4 = "https://www.medium.com"
     s5 = ''
     l = []
     l.append(s1)
