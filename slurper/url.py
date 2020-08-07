@@ -6,6 +6,7 @@ from json import JSONEncoder
 import requests
 from reppy.robots import Robots
 from validator_collection import validators, checkers, errors
+from utils import dynamodb
 
 
 '''
@@ -28,6 +29,7 @@ class URL:
     url_type: str 
     time_requested: datetime 
     requesting_user: str 
+    time_processing_scheduled: datetime 
 
 class UrlProcessor:
 
@@ -83,9 +85,10 @@ class UrlProcessor:
         hostname = '.'.join(part for part in extract if part)
         url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
         time_requested = datetime.now().timestamp() * 1000
+        time_processing_scheduled = datetime.now().timestamp() * 1000
         requesting_user = None
 
-        url = URL(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user)
+        url = URL(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user, time_processing_scheduled)
 
         return url
 
@@ -117,7 +120,7 @@ if __name__ == "__main__":
     s2 = "https://medium.com"
     s3 = "https://www.google.com"
     s4 = "https://www.medium.com"
-    s5 = ''
+    s5 = 'https://b.medium.com'
     l = []
     l.append(s1)
     l.append(s2)
@@ -126,4 +129,7 @@ if __name__ == "__main__":
     l.append(s5)
     urls = UrlProcessor().parse(l)
     print(SeriesEncoder().encode(urls))
+
+    util = dynamodb.DBUtils()
+    util.upsert_urls(urls)
 

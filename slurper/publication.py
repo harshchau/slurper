@@ -6,7 +6,7 @@ import logging
 import argparse
 from bs4 import BeautifulSoup
 import time
-from url import UrlProcessor
+from .url import UrlProcessor
 from urllib.parse import urlparse
 from dataclasses import dataclass
 import boto3
