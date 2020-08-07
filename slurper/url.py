@@ -7,9 +7,11 @@ from json import JSONEncoder
 import requests
 from reppy.robots import Robots
 from validator_collection import validators, checkers, errors
-from utils import dynamodb
+from .utils import dynamodb
 import time
 import json
+import random 
+from datetime import timezone
 
 
 '''
@@ -30,9 +32,9 @@ class Url:
     subdomain: str 
     suffix: str
     url_type: str 
-    time_requested: str  
+    time_requested: int  
     requesting_user: str 
-    ttl: str 
+    ttl: int 
 
 class UrlProcessor:
 
@@ -87,9 +89,12 @@ class UrlProcessor:
         suffix = extract.suffix
         hostname = '.'.join(part for part in extract if part)
         url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
-        time_requested = datetime.now().strftime("%A, %d, %B %Y %I:%M:%S%p")
-        #ttl = datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S%p") #+ import_datetime.timedelta(0,10,0,0,0,0,0)
-        ttl = time_requested
+#        time_requested = datetime.now().strftime("%A, %d, %B %Y %I:%M:%S %p")
+#        ttl = (datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S %p") + import_datetime.timedelta(0,self.ttl_delta(),0,0,0,0,0)).strftime("%A, %d, %B %Y %I:%M:%S %p")
+        time_requested = int(datetime.now().timestamp())
+#        print('#####', time_requested, type(time_requested))
+        ttl = time_requested + self.ttl_delta()
+        print('#####', ttl)
         requesting_user = None
 
         url = Url(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user, ttl)
@@ -111,6 +116,9 @@ class UrlProcessor:
         robots = Robots.fetch(robots_url, headers={'user-agent': 'slurper'})
         ret = robots.allowed(url, 'slurper')
         return ret
+
+    def ttl_delta(self) -> int:
+        return random.randrange(0,10)
     
 class UrlEncoder(JSONEncoder):
     def default(self, o):
@@ -132,16 +140,8 @@ if __name__ == "__main__":
     l.append(s4)
     l.append(s5)
     urls = UrlProcessor().parse(l)
-    print('############################')
-    print('urls', type(urls))
-    x = UrlEncoder().encode(urls)
-    print('x', type(x))
-    y = json.dumps(urls, cls=UrlEncoder)
-    print('y', type(y))
-    print('############################')
-    print(UrlEncoder().encode(urls))
+    print(json.dumps(urls, cls=UrlEncoder, indent=2))
 
     util = dynamodb.DBUtils()
-    #util.upsert_urls(urls)
+    util.upsert_urls(urls)
     
-    print('TIME', time.time())

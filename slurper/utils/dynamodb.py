@@ -2,7 +2,7 @@ import os
 import boto3
 
 class DBUtils:
-
+    always_insert = True
     def __init__(self):
         # If URLS_TABLE present in os.environ, use it, else use the urls_table
         # This is used in case the table name comes from the serverless setting
@@ -26,7 +26,7 @@ class DBUtils:
                     'domain': {'S': u.domain},
                     'subdomain': {'S': u.subdomain},
                     'url_type': {'S': u.url_type},
-                    'time_requested': {'S': str(u.time_requested)},
+                    'time_requested': {'N': str(u.time_requested)},
                     'requesting_user': {'S': '' if u.requesting_user is None else u.requesting_user},
                     'bucket_id': {'S': ''},
                     'data_class': {'S': ''},
@@ -41,6 +41,9 @@ class DBUtils:
         print('EXISTING URLS: ', urls)
 
     def upsert_urls(self, urls):
+        if self.always_insert: 
+            self._insert_urls(urls['parsed_urls'])
+            pass
         new_urls = []
         existing_urls = []
         for u in urls['parsed_urls']:
