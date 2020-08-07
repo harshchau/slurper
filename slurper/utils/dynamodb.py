@@ -14,6 +14,7 @@ class DBUtils:
         dynamodb = boto3.resource('dynamodb')
         self.client = boto3.client('dynamodb')
         self.table = dynamodb.Table(self.URLS_TABLE)
+        self.dynamodbstreamsclient = boto3.client('dynamodbstreams')
 
     def _insert_urls(self, urls: list):
         resp = ''
@@ -25,11 +26,12 @@ class DBUtils:
                     'domain': {'S': u.domain},
                     'subdomain': {'S': u.subdomain},
                     'url_type': {'S': u.url_type},
-                    'time_requested': {'N': str(u.time_requested)},
+                    'time_requested': {'S': str(u.time_requested)},
                     'requesting_user': {'S': '' if u.requesting_user is None else u.requesting_user},
                     'bucket_id': {'S': ''},
                     'data_class': {'S': ''},
-                    'child_urls': {'L': []}
+                    'child_urls': {'L': []},
+                    'ttl': {'N': str(u.ttl)}
                 }   
             )
         print('INSERT URLS: ', resp)
@@ -56,4 +58,30 @@ class DBUtils:
                 new_urls.append(u)
         self._update_urls(existing_urls)
         self._insert_urls(new_urls)
+
+    def _read_stream(self):
+        list_streams = self.dynamodbstreamsclient.list_streams(
+            TableName=self.URLS_TABLE,
+            Limit=100,
+#            ExclusiveStartStreamArn='string'
+        )
+        stream_arn = list_streams['Streams'][0]['StreamArn']
+
+        describe_stream = self.dynamodbstreamsclient.describe_stream(
+#            ExclusiveStartShardId = 'LATEST',
+#           "Limit": number,
+            StreamArn = stream_arn
+        )
+#        response = self.dynamodbstreamsclient.get_records(
+#            ShardIterator='LATEST',
+#            Limit=100
+#        )
+
+        print('LIST_STREAMS', list_streams)
+        print('STREAM_ARN', stream_arn)
+        print('DESCRIBE_STREAMS', describe_stream)
+
+if __name__ == '__main__':
+    db = DBUtils()
+    db._read_stream()
             
