@@ -7,7 +7,7 @@ from json import JSONEncoder
 import requests
 from reppy.robots import Robots
 from validator_collection import validators, checkers, errors
-from utils import dynamodb
+from .utils import dynamodb
 import time
 import json
 import random 
@@ -27,11 +27,11 @@ Module to handle url requests.
 @dataclass
 class Url:
     url: str
-    scheme: str 
-    hostname: str
+#    scheme: str 
+#    hostname: str
     domain: str 
     subdomain: str 
-    suffix: str
+#    suffix: str
     url_type: str 
     time_requested: int  
     requesting_user: str 
@@ -99,19 +99,19 @@ class UrlProcessor:
     def process_url(self, url: str) -> Url:
         extract = tldextract.extract(url)
         # Find the first non None part in the url and do a substring on the url from index 0 - whatever
-        scheme = url[:url.index([part for part in extract if part][0])]
+        #scheme = url[:url.index([part for part in extract if part][0])]
         subdomain = extract.subdomain
         domain = extract.domain 
-        suffix = extract.suffix
-        hostname = '.'.join(part for part in extract if part)
+        #suffix = extract.suffix
+        #hostname = '.'.join(part for part in extract if part)
         url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
         refreshable = True if url_type == 'PUB' else False
 #        time_requested = datetime.now().strftime("%A, %d, %B %Y %I:%M:%S %p")
 #        ttl = (datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S %p") + import_datetime.timedelta(0,self.ttl_delta(),0,0,0,0,0)).strftime("%A, %d, %B %Y %I:%M:%S %p")
         time_requested = int(datetime.now().timestamp())
-        requesting_user = None
+        requesting_user = 'chaudhary.harsh@gmail.com'
 
-        url = Url(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user, refreshable)
+        url = Url(url, domain, subdomain, url_type, time_requested, requesting_user, refreshable)
 
         return url
 

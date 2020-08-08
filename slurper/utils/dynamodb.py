@@ -29,7 +29,6 @@ class DBUtils:
                     'time_requested': {'N': str(u.time_requested)},
                     'requesting_user': {'S': '' if u.requesting_user is None else u.requesting_user},
                     'bucket_id': {'S': ''},
-                    'data_class': {'S': ''},
                     'child_urls': {'L': []},
                     'refreshable': {'BOOL': u.refreshable}
                 }   
