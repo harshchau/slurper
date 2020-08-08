@@ -35,6 +35,7 @@ class Url:
     url_type: str 
     time_requested: int  
     requesting_user: str 
+    refreshable: bool
 
 class UrlProcessor:
 
@@ -104,12 +105,13 @@ class UrlProcessor:
         suffix = extract.suffix
         hostname = '.'.join(part for part in extract if part)
         url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
+        refreshable = True if url_type == 'PUB' else False
 #        time_requested = datetime.now().strftime("%A, %d, %B %Y %I:%M:%S %p")
 #        ttl = (datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S %p") + import_datetime.timedelta(0,self.ttl_delta(),0,0,0,0,0)).strftime("%A, %d, %B %Y %I:%M:%S %p")
         time_requested = int(datetime.now().timestamp())
         requesting_user = None
 
-        url = Url(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user)
+        url = Url(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user, refreshable)
 
         return url
 
