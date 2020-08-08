@@ -7,11 +7,12 @@ from json import JSONEncoder
 import requests
 from reppy.robots import Robots
 from validator_collection import validators, checkers, errors
-from .utils import dynamodb
+from utils import dynamodb
 import time
 import json
 import random 
 from datetime import timezone
+import urllib
 
 
 '''
@@ -34,7 +35,6 @@ class Url:
     url_type: str 
     time_requested: int  
     requesting_user: str 
-    ttl: int 
 
 class UrlProcessor:
 
@@ -60,8 +60,10 @@ class UrlProcessor:
             try:
                 if self.is_valid(u) is True:
                     u = self.process_url(u)
-                    if u.url_type == 'PUB':
+                    if u.url_type == 'PUB' and self.is_url_live(u.url) == True:
                         parsed_urls.append(u)
+                    elif u.url_type == 'PUB' and self.is_url_live(u.url) == False:
+                        error_urls.append(u)
                     else:
                         ignored_urls.append(u)
                 else:
@@ -73,6 +75,19 @@ class UrlProcessor:
         ret['parsed_urls'] = parsed_urls
         ret['error_urls'] = error_urls
         ret['ignored_urls'] = ignored_urls
+        return ret
+
+    def is_url_live(self, url) -> bool:
+        ret = False 
+        try:
+            req = urllib.request.Request(url, headers={'user-agent': 'slurper'})
+            resp = urllib.request.urlopen(req)
+            if resp: ret = True
+        except urllib.error.HTTPError as e:
+            print(e.code, url)
+        except urllib.error.URLError as e:
+            print(e.args, url)
+        
         return ret
 
     '''
@@ -92,12 +107,9 @@ class UrlProcessor:
 #        time_requested = datetime.now().strftime("%A, %d, %B %Y %I:%M:%S %p")
 #        ttl = (datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S %p") + import_datetime.timedelta(0,self.ttl_delta(),0,0,0,0,0)).strftime("%A, %d, %B %Y %I:%M:%S %p")
         time_requested = int(datetime.now().timestamp())
-#        print('#####', time_requested, type(time_requested))
-        ttl = time_requested + self.ttl_delta()
-        print('#####', ttl)
         requesting_user = None
 
-        url = Url(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user, ttl)
+        url = Url(url, scheme, hostname, domain, subdomain, suffix, url_type, time_requested, requesting_user)
 
         return url
 
@@ -116,9 +128,6 @@ class UrlProcessor:
         robots = Robots.fetch(robots_url, headers={'user-agent': 'slurper'})
         ret = robots.allowed(url, 'slurper')
         return ret
-
-    def ttl_delta(self) -> int:
-        return random.randrange(0,10)
     
 class UrlEncoder(JSONEncoder):
     def default(self, o):
