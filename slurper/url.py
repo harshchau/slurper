@@ -35,6 +35,8 @@ class Url:
     url_type: str 
     time_requested: int  
     requesting_user: str 
+    bucket_id: str 
+    child_urls: list
     refreshable: bool
 
 class UrlProcessor:
@@ -110,8 +112,10 @@ class UrlProcessor:
 #        ttl = (datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S %p") + import_datetime.timedelta(0,self.ttl_delta(),0,0,0,0,0)).strftime("%A, %d, %B %Y %I:%M:%S %p")
         time_requested = int(datetime.now().timestamp())
         requesting_user = 'chaudhary.harsh@gmail.com'
+        bucket_id = ''
+        child_urls = []
 
-        url = Url(url, domain, subdomain, url_type, time_requested, requesting_user, refreshable)
+        url = Url(url, domain, subdomain, url_type, time_requested, requesting_user, bucket_id, child_urls, refreshable)
 
         return url
 

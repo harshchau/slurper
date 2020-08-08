@@ -19,20 +19,22 @@ class DBUtils:
     def _insert_urls(self, urls: list):
         resp = ''
         for u in urls:
-            resp = self.client.put_item(
-                TableName=self.URLS_TABLE,
-                Item={
-                    'url': {'S': u.url},
-                    'domain': {'S': u.domain},
-                    'subdomain': {'S': u.subdomain},
-                    'url_type': {'S': u.url_type},
-                    'time_requested': {'N': str(u.time_requested)},
-                    'requesting_user': {'S': '' if u.requesting_user is None else u.requesting_user},
-                    'bucket_id': {'S': ''},
-                    'child_urls': {'L': []},
-                    'refreshable': {'BOOL': u.refreshable}
-                }   
-            )
+#            resp = self.client.put_item(
+#                TableName=self.URLS_TABLE,
+#                Item={
+#                    'url': {'S': u.url},
+#                    'domain': {'S': u.domain},
+#                    'subdomain': {'S': u.subdomain},
+#                    'url_type': {'S': u.url_type},
+#                    'time_requested': {'N': str(u.time_requested)},
+#                    'requesting_user': {'S': '' if u.requesting_user is None else u.requesting_user},
+#                    'bucket_id': {'S': ''},
+#                    'child_urls': {'L': []},
+#                    'refreshable': {'BOOL': u.refreshable}
+#                }   
+#            )
+            self.table.put_item(Item=u.__dict__)
+
         print('INSERT URLS: ', resp)
         return resp
 
