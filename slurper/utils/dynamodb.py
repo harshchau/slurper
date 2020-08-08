@@ -30,8 +30,7 @@ class DBUtils:
                     'requesting_user': {'S': '' if u.requesting_user is None else u.requesting_user},
                     'bucket_id': {'S': ''},
                     'data_class': {'S': ''},
-                    'child_urls': {'L': []},
-                    'ttl': {'N': str(u.ttl)}
+                    'child_urls': {'L': []}
                 }   
             )
         print('INSERT URLS: ', resp)
@@ -56,35 +55,9 @@ class DBUtils:
                 item = response['Item']
                 if item:
                     existing_urls.append(u)
-                print('#####', item)
+#                print('#####', item)
             except KeyError as err:
                 new_urls.append(u)
         self._update_urls(existing_urls)
         self._insert_urls(new_urls)
-
-    def _read_stream(self):
-        list_streams = self.dynamodbstreamsclient.list_streams(
-            TableName=self.URLS_TABLE,
-            Limit=100,
-#            ExclusiveStartStreamArn='string'
-        )
-        stream_arn = list_streams['Streams'][0]['StreamArn']
-
-        describe_stream = self.dynamodbstreamsclient.describe_stream(
-#            ExclusiveStartShardId = 'LATEST',
-#           "Limit": number,
-            StreamArn = stream_arn
-        )
-#        response = self.dynamodbstreamsclient.get_records(
-#            ShardIterator='LATEST',
-#            Limit=100
-#        )
-
-        print('LIST_STREAMS', list_streams)
-        print('STREAM_ARN', stream_arn)
-        print('DESCRIBE_STREAMS', describe_stream)
-
-if __name__ == '__main__':
-    db = DBUtils()
-    db._read_stream()
             
