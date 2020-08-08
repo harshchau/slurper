@@ -6,7 +6,7 @@ import logging
 import argparse
 from bs4 import BeautifulSoup
 import time
-from .url import UrlProcessor
+from url import UrlProcessor
 from urllib.parse import urlparse
 from dataclasses import dataclass
 import boto3
@@ -37,14 +37,6 @@ Steps:
 logging.basicConfig(level = logging.ERROR)
 log = logging.getLogger(__name__)
 logging.getLogger(__name__).setLevel(logging.DEBUG)
-
-@dataclass
-class Publication:
-    url: str
-    dataset: () # featured, archive, meta data
-    featured: list # list of featured url's 
-    time_requested: datetime 
-    requesting_user: str 
 
 class PublicationProcessor:
 
@@ -150,25 +142,3 @@ if __name__ == '__main__':
         log.info(u)
     log.info(type(urls))
     log.info(len(urls))
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-    table = dynamodb.Table('publications_table')
-    #for u in urls:
-    #    response = table.put_item(
-    #    Item={
-    #            'url': u
-    #        }
-    #    )
-    #    print(response)
-    with table.batch_writer() as writer:
-        for u in urls:
-            item = {
-                'url': u
-            }
-            writer.put_item(Item=item)
-
-    #try:
-    #    response = table.get_item(Key={'url': 'google'}) 
-    #except ClientError as e:
-    #    print(e.response['Error']['Message'])
-    #else:
-    #    print(response['Item'])
