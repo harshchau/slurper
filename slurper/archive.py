@@ -30,7 +30,6 @@ class ArchiveProcessor:
 
     def get_timebuckets(self, url_list): 
         u = url_list.pop()
-        print(self.get_url_info(u)['key'])
         if self.get_url_info(u)['is_date_url']:
             return self.get_timebuckets(url_list)
         html_doc = requests.get(u).text
@@ -78,7 +77,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/2019'
+    archive_url = 'https://marker.medium.com/archive'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
 #    print(ap.timebuckets)
