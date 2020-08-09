@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import json
 from json import JSONEncoder
+import tldextract 
 
 @dataclass 
 class Archive:
@@ -18,38 +19,43 @@ Class to contain all features related to archives
 class ArchiveProcessor:
     soup = None 
     timebuckets = {}
-    tracker_set = set()
+    tracker_list = list()
 
     def __init__(self, archive_url):
         # get html string
         html_doc = requests.get(archive_url).text
         # make some soup
         self.soup = BeautifulSoup(html_doc, 'html.parser')
+        self.tracker_list.extend([archive_url])
 
     def get_timebuckets(self, url_list): 
-#        print('RECEIVED', len(url_list), url_list)
-        # get html string
         u = url_list.pop()
+        if self.get_url_info(u)['is_date_url']:
+            return self.get_timebuckets(url_list)
         html_doc = requests.get(u).text
-        # make some soup
         soup = BeautifulSoup(html_doc, 'html.parser')
         timeline_tags = soup.find_all('div', class_='timebucket')
-#        self.timebuckets.update({t.a.string:t.a['href'] for t in timeline_tags})
-#        print(self.timebuckets)
-#        if len(timeline_tags) > 0:
-        local_set = {t.a['href'] for t in timeline_tags if t.a}
-#            print('TYPE', type(local_set), type(url_list))
-#        print('######################')
-#        print('LOCAL_SET', len(local_set), local_set)
-#        print( )
-#        print('URL_LIST', len(url_list), url_list)
-#        print(local_set == url_list)
-        print(f'LOCAL_SET: {len(local_set)} URL_LIST: {len(url_list)} TRACKER_SET: {len(self.tracker_set)} URL: {u}')
-#        print('<<<<<<<<<<<<<<<<<<<<<<')
-        self.tracker_set.update(local_set)
-        url_list.update(local_set)
+        local_list = [t.a['href'] for t in timeline_tags if t.a]
+#        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER_LIST: {len(self.tracker_list)} URL: {u}')
+        url_list.extend(local_list)
+        self.tracker_list.extend(local_list)
 
-        return self.get_timebuckets(sorted(url_list))
+        if len(url_list) == 0:
+            for u in self.tracker_list:
+                print(u)
+            return 
+        else:
+            return self.get_timebuckets(list(sorted(set(url_list))))
+
+    def get_url_info(self, url: str):
+        url_info = {'is_date_url': False}
+        extract = tldextract.extract(url)
+        suffix = extract.suffix
+        rest = url[url.index(suffix) + len(suffix):]
+#        print(rest.split('/')) # For date urls ['', 'archive', '2019', '12', '30']
+        if len(rest.split('/')) == 5: url_info['is_date_url'] = True
+
+        return url_info
 
     '''
         Given a URL to a publication archive (yearly, monthly, daily), get all post URL's from the archives
@@ -71,7 +77,7 @@ class ArchiveEncoder(JSONEncoder):
 if __name__ == '__main__':
     archive_url = 'https://marker.medium.com/archive/2019'
     ap = ArchiveProcessor(archive_url)
-    ap.timebuckets = ap.get_timebuckets({archive_url,})
+    ap.timebuckets = ap.get_timebuckets([archive_url])
 #    print(ap.timebuckets)
 
 #    a = Archive(publication, datetime.now().timestamp(), {'ALL': ap.get_archive_post_urls()})
