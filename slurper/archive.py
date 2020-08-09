@@ -19,17 +19,18 @@ Class to contain all features related to archives
 class ArchiveProcessor:
     soup = None 
     timebuckets = {}
-    tracker_list = list()
+    tracker_list = dict()
 
     def __init__(self, archive_url):
         # get html string
         html_doc = requests.get(archive_url).text
         # make some soup
         self.soup = BeautifulSoup(html_doc, 'html.parser')
-        self.tracker_list.extend([archive_url])
+        self.tracker_list.update({archive_url:self.get_url_info(archive_url)['key']})
 
     def get_timebuckets(self, url_list): 
         u = url_list.pop()
+        print(self.get_url_info(u)['key'])
         if self.get_url_info(u)['is_date_url']:
             return self.get_timebuckets(url_list)
         html_doc = requests.get(u).text
@@ -38,11 +39,11 @@ class ArchiveProcessor:
         local_list = [t.a['href'] for t in timeline_tags if t.a]
 #        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER_LIST: {len(self.tracker_list)} URL: {u}')
         url_list.extend(local_list)
-        self.tracker_list.extend(local_list)
+        self.tracker_list.update({i:self.get_url_info(i)['key'] for i in local_list})
 
         if len(url_list) == 0:
-            for u in self.tracker_list:
-                print(u)
+            for k,v in self.tracker_list.items():
+                print(k,v)
             return 
         else:
             return self.get_timebuckets(list(sorted(set(url_list))))
@@ -54,6 +55,8 @@ class ArchiveProcessor:
         rest = url[url.index(suffix) + len(suffix):]
 #        print(rest.split('/')) # For date urls ['', 'archive', '2019', '12', '30']
         if len(rest.split('/')) == 5: url_info['is_date_url'] = True
+
+        url_info['key'] = '#'.join(rest.split('/')[2:])
 
         return url_info
 
