@@ -20,13 +20,14 @@ class ArchiveProcessor:
     tracker = dict()
 
     def __init__(self, archive_url):
-        self.tracker_list.update({archive_url:self.get_url_info(archive_url)['key']})
         # This check is required only on the initial URL. This is due to the behavior of medium
         # where for an archive, a wrong url still returns the archive page for the url.
         # This check is not required for right initial urls as that check is done when 
         # local_list is created 
         if self.is_url_valid(archive_url) is False:
             raise Exception(f'Invalid archive URL: {archive_url}')
+        else:
+            self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key']}})
 
     def get_timebuckets(self, url_list): 
         u = url_list.pop()
@@ -42,7 +43,7 @@ class ArchiveProcessor:
         local_list = [t.a['href'] for t in timeline_tags if t.a]
 #        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER: {len(self.tracker)} URL: {u}')
         url_list.extend(local_list)
-        self.tracker.update({i:self.get_url_info(i)['key'] for i in local_list})
+        self.tracker.update({u:{'key':self.get_url_info(u)['key']} for u in local_list})
 
         if len(url_list) == 0:
             return self.tracker # Done 
