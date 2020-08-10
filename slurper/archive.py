@@ -35,7 +35,6 @@ class ArchiveProcessor:
             raise Exception(f'Invalid archive URL: {archive_url}')
 
     def get_timebuckets(self, url_list): 
-#        print(url_list)
         u = url_list.pop()
         # If url is a date url, return. At this point, all peer date urls have been added to url_list and tracker_list
         if self.get_url_info(u)['is_date_url']:
@@ -52,8 +51,6 @@ class ArchiveProcessor:
         self.tracker_list.update({i:self.get_url_info(i)['key'] for i in local_list})
 
         if len(url_list) == 0:
-#            for k,v in self.tracker_list.items():
-#                print(k,v)
             return self.tracker_list # Done 
         else:
             return self.get_timebuckets(list(sorted(set(url_list)))) # Keep going 
@@ -65,8 +62,6 @@ class ArchiveProcessor:
         rest = url[url.index(suffix) + len(suffix):]
         split_rest = rest.split('/')
         split_rest = [i for i in split_rest if i != '']
-#        print(split_rest) # For date urls ['', 'archive', '2019', '12', '30']
-        # The second condition handles the issue with a trailing slash. We get non date urls identified as dates
         if len(split_rest) == 4: url_info['is_date_url'] = True
 
         url_info['key'] = '#'.join(split_rest[1:])
@@ -106,10 +101,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archivea'
+    archive_url = 'https://marker.medium.com/archive/2020/08'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
-
-#    a = Archive(publication, datetime.now().timestamp(), {'ALL': ap.get_archive_post_urls()})
-#    print(json.dumps(a, cls = ArchiveEncoder, indent=2))
