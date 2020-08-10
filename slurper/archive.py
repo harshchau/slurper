@@ -31,8 +31,9 @@ class ArchiveProcessor:
     def get_timebuckets(self, url_list): 
 #        print(url_list)
         u = url_list.pop()
+        # If url is a date url, return. At this point, all peer date urls have been added to url_list and tracker_list
         if self.get_url_info(u)['is_date_url']:
-            if len(url_list) == 0:
+            if len(url_list) == 0: # To prevent breaks when starting input is a date url only (url_list will be empty)
                 return self.tracker_list
             else:
                 return self.get_timebuckets(url_list)
