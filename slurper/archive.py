@@ -58,7 +58,7 @@ class ArchiveProcessor:
         rest = url[url.index(suffix) + len(suffix):]
         split_rest = rest.split('/')
         split_rest = [i for i in split_rest if i != '']
-        print(split_rest) # For date urls ['', 'archive', '2019', '12', '30']
+#        print(split_rest) # For date urls ['', 'archive', '2019', '12', '30']
         # The second condition handles the issue with a trailing slash. We get non date urls identified as dates
         if len(split_rest) == 4: url_info['is_date_url'] = True
 
