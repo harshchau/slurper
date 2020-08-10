@@ -6,12 +6,29 @@ from datetime import datetime
 import json
 from json import JSONEncoder
 import tldextract 
+from functools import wraps
+import time
 
 @dataclass 
 class Archive:
     publication_url: str = None
     time_requested: int = datetime.now().timestamp()
     child_data_set: [] = None
+
+'''
+Primer on how to use wraps for this decorator 
+https://www.saltycrane.com/blog/2010/03/simple-python-decorator-examples/
+'''
+def _timer_function_run(f):
+    @wraps(f)
+    def timer(*args, **kwargs):
+        start_time = time.time()
+        print(f'Timer for archive URL: {args}')
+        r = f(*args, **kwargs)
+        end_time = time.time()
+        print(f'Time taken: {(end_time - start_time) * 1000:.9f} ms')
+        return r
+    return timer
 
 '''
 Class to contain all features related to archives
@@ -29,6 +46,7 @@ class ArchiveProcessor:
         else:
             self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key'], 'post-urls':self.get_archive_post_urls(archive_url)}})
 
+    @_timer_function_run
     def get_timebuckets(self, url_list): 
         u = url_list.pop()
         # If url is a date url, return. At this point, all peer date urls have been added to url_list and tracker
