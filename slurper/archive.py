@@ -32,7 +32,7 @@ class ArchiveProcessor:
         # This check is not required for right initial urls as that check is done when 
         # local_list is created 
         if self.is_url_valid(archive_url) is False:
-            raise Exception(f'Invalid URL: {archive_url}')
+            raise Exception(f'Invalid archive URL: {archive_url}')
 
     def get_timebuckets(self, url_list): 
 #        print(url_list)
@@ -106,7 +106,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive'
+    archive_url = 'https://marker.medium.com/archivea'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
