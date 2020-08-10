@@ -27,7 +27,7 @@ class ArchiveProcessor:
         if self.is_url_valid(archive_url) is False:
             raise Exception(f'Invalid archive URL: {archive_url}')
         else:
-            self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key']}})
+            self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key'], 'post-urls':self.get_archive_post_urls(archive_url)}})
 
     def get_timebuckets(self, url_list): 
         u = url_list.pop()
@@ -62,7 +62,7 @@ class ArchiveProcessor:
         url_info['key'] = '#'.join(split_rest[1:])
 
         return url_info
-
+    # Just called during __init__
     def is_url_valid(self, url):
         ret = False 
         html_doc = requests.get(url).text
@@ -98,7 +98,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/'
+    archive_url = 'https://marker.medium.com/archive/2020/05/01'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
