@@ -17,15 +17,9 @@ class Archive:
 Class to contain all features related to archives
 '''
 class ArchiveProcessor:
-    soup = None 
-    timebuckets = {}
     tracker_list = dict()
 
     def __init__(self, archive_url):
-        # get html string
-        html_doc = requests.get(archive_url).text
-        # make some soup
-        self.soup = BeautifulSoup(html_doc, 'html.parser')
         self.tracker_list.update({archive_url:self.get_url_info(archive_url)['key']})
         # This check is required only on the initial URL. This is due to the behavior of medium
         # where for an archive, a wrong url still returns the archive page for the url.
@@ -88,7 +82,7 @@ class ArchiveProcessor:
     '''
     def get_archive_post_urls(self) -> list:
         ret = []
-        sections = self.soup.find_all('section')
+        sections = soup.find_all('section')
         for s in sections:
             a = s.find_parent('a')
             ret.append(a['href'])
