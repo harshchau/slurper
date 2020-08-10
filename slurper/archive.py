@@ -29,9 +29,13 @@ class ArchiveProcessor:
         self.tracker_list.update({archive_url:self.get_url_info(archive_url)['key']})
 
     def get_timebuckets(self, url_list): 
+#        print(url_list)
         u = url_list.pop()
         if self.get_url_info(u)['is_date_url']:
-            return self.get_timebuckets(url_list)
+            if len(url_list) == 0:
+                return self.tracker_list
+            else:
+                return self.get_timebuckets(url_list)
         html_doc = requests.get(u).text
         soup = BeautifulSoup(html_doc, 'html.parser')
         timeline_tags = soup.find_all('div', class_='timebucket')
@@ -41,9 +45,9 @@ class ArchiveProcessor:
         self.tracker_list.update({i:self.get_url_info(i)['key'] for i in local_list})
 
         if len(url_list) == 0:
-            for k,v in self.tracker_list.items():
-                print(k,v)
-            return 
+#            for k,v in self.tracker_list.items():
+#                print(k,v)
+            return self.tracker_list
         else:
             return self.get_timebuckets(list(sorted(set(url_list))))
 
@@ -80,7 +84,7 @@ if __name__ == '__main__':
     archive_url = 'https://marker.medium.com/archive'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
-#    print(ap.timebuckets)
+    print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
 
 #    a = Archive(publication, datetime.now().timestamp(), {'ALL': ap.get_archive_post_urls()})
 #    print(json.dumps(a, cls = ArchiveEncoder, indent=2))
