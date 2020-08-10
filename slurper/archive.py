@@ -43,7 +43,7 @@ class ArchiveProcessor:
         local_list = [t.a['href'] for t in timeline_tags if t.a]
 #        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER: {len(self.tracker)} URL: {u}')
         url_list.extend(local_list)
-        self.tracker.update({u:{'key':self.get_url_info(u)['key']} for u in local_list})
+        self.tracker.update({u:{'key':self.get_url_info(u)['key'],'post-urls':self.get_archive_post_urls(u)} for u in local_list})
 
         if len(url_list) == 0:
             return self.tracker # Done 
@@ -81,8 +81,10 @@ class ArchiveProcessor:
     '''
         Given a URL to a publication archive (yearly, monthly, daily), get all post URL's from the archives
     '''
-    def get_archive_post_urls(self) -> list:
+    def get_archive_post_urls(self, archive_url: str) -> list:
         ret = []
+        html_doc = requests.get(archive_url).text
+        soup = BeautifulSoup(html_doc, 'html.parser')
         sections = soup.find_all('section')
         for s in sections:
             a = s.find_parent('a')
@@ -96,7 +98,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/2020/08'
+    archive_url = 'https://marker.medium.com/archive/'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
