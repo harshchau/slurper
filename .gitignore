@@ -10,3 +10,4 @@ dist/
 slurper.egg-info/
 slurper-env 
 log.txt
+archive.json
