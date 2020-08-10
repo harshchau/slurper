@@ -17,7 +17,7 @@ class Archive:
 Class to contain all features related to archives
 '''
 class ArchiveProcessor:
-    tracker_list = dict()
+    tracker = dict()
 
     def __init__(self, archive_url):
         self.tracker_list.update({archive_url:self.get_url_info(archive_url)['key']})
@@ -30,22 +30,22 @@ class ArchiveProcessor:
 
     def get_timebuckets(self, url_list): 
         u = url_list.pop()
-        # If url is a date url, return. At this point, all peer date urls have been added to url_list and tracker_list
+        # If url is a date url, return. At this point, all peer date urls have been added to url_list and tracker
         if self.get_url_info(u)['is_date_url']:
             if len(url_list) == 0: # To prevent breaks when starting input is a date url only (url_list will be empty)
-                return self.tracker_list # Done 
+                return self.tracker # Done 
             else:
                 return self.get_timebuckets(url_list) # Keep going 
         html_doc = requests.get(u).text
         soup = BeautifulSoup(html_doc, 'html.parser')
         timeline_tags = soup.find_all('div', class_='timebucket')
         local_list = [t.a['href'] for t in timeline_tags if t.a]
-#        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER_LIST: {len(self.tracker_list)} URL: {u}')
+#        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER: {len(self.tracker)} URL: {u}')
         url_list.extend(local_list)
-        self.tracker_list.update({i:self.get_url_info(i)['key'] for i in local_list})
+        self.tracker.update({i:self.get_url_info(i)['key'] for i in local_list})
 
         if len(url_list) == 0:
-            return self.tracker_list # Done 
+            return self.tracker # Done 
         else:
             return self.get_timebuckets(list(sorted(set(url_list)))) # Keep going 
 
