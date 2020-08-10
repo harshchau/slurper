@@ -63,7 +63,7 @@ class ArchiveProcessor:
         # The second condition handles the issue with a trailing slash. We get non date urls identified as dates
         if len(split_rest) == 4: url_info['is_date_url'] = True
 
-        url_info['key'] = '#'.join(rest.split('/')[2:])
+        url_info['key'] = '#'.join(split_rest[1:])
 
         return url_info
 
@@ -85,7 +85,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/2019/11/10'
+    archive_url = 'https://marker.medium.com/archive/2019/11/'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
