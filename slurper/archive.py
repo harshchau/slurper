@@ -56,8 +56,9 @@ class ArchiveProcessor:
         extract = tldextract.extract(url)
         suffix = extract.suffix
         rest = url[url.index(suffix) + len(suffix):]
-#        print(rest.split('/')) # For date urls ['', 'archive', '2019', '12', '30']
-        if len(rest.split('/')) == 5: url_info['is_date_url'] = True
+        print(rest.split('/')) # For date urls ['', 'archive', '2019', '12', '30']
+        # The second condition handles the issue with a trailing slash. We get non date urls identified as dates
+        if len(rest.split('/')) == 5 and rest.split('/')[-1] != '': url_info['is_date_url'] = True
 
         url_info['key'] = '#'.join(rest.split('/')[2:])
 
@@ -81,7 +82,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive'
+    archive_url = 'https://marker.medium.com/archive/2019/11'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
