@@ -69,11 +69,11 @@ class ArchiveProcessor:
         local_list = [t.a['href'] for t in timeline_tags if t.a]
 #        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER: {len(self.tracker)} URL: {u}')
 
+        # Concurrent calls to get archive post urls for local list
         archive_post_urls_for_local_list = self.ex.map(self.get_archive_post_urls, local_list)
         real_results = list(archive_post_urls_for_local_list)
-        #print(local_list)
+        # Store all archive post urls for each url in the local list in a dictionary
         dict_of_archive_post_urls_for_local_list = {u:real_results[local_list.index(u)] for u in local_list}
-#        print(dict_of_archive_post_urls_for_local_list)
         
 
         url_list.extend(local_list)
