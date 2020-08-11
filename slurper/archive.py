@@ -8,6 +8,8 @@ from json import JSONEncoder
 import tldextract 
 from functools import wraps
 import time
+from concurrent import futures 
+from concurrent.futures import ThreadPoolExecutor
 
 @dataclass 
 class Archive:
@@ -23,10 +25,13 @@ def _timer_function_run(f):
     @wraps(f)
     def timer(*args, **kwargs):
         start_time = time.time()
-        print(f'Timer for archive URL: {args}')
+        if(type(args[1])) == list:
+            urls = args[1].copy()
+        else:
+            urls = args[1]
         r = f(*args, **kwargs)
         end_time = time.time()
-        print(f'Time taken: {(end_time - start_time) * 1000:.9f} ms')
+        print(f'Time taken > Method: {f.__name__} Url: {urls} {(end_time - start_time) * 1000:.9f} ms')
         return r
     return timer
 
@@ -35,6 +40,8 @@ Class to contain all features related to archives
 '''
 class ArchiveProcessor:
     tracker = dict()
+    soup_dict = dict()
+    ex = None
 
     def __init__(self, archive_url):
         # This check is required only on the initial URL. This is due to the behavior of medium
@@ -45,6 +52,7 @@ class ArchiveProcessor:
             raise Exception(f'Invalid archive URL: {archive_url}')
         else:
             self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key'], 'post-urls':self.get_archive_post_urls(archive_url)}})
+        self.ex = futures.ThreadPoolExecutor(max_workers=20)
 
     @_timer_function_run
     def get_timebuckets(self, url_list): 
@@ -60,13 +68,24 @@ class ArchiveProcessor:
         timeline_tags = soup.find_all('div', class_='timebucket')
         local_list = [t.a['href'] for t in timeline_tags if t.a]
 #        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER: {len(self.tracker)} URL: {u}')
+
+        archive_post_urls_for_local_list = self.ex.map(self.get_archive_post_urls, local_list)
+        real_results = list(archive_post_urls_for_local_list)
+        #print(local_list)
+        dict_of_archive_post_urls_for_local_list = {u:real_results[local_list.index(u)] for u in local_list}
+#        print(dict_of_archive_post_urls_for_local_list)
+        
+
         url_list.extend(local_list)
-        self.tracker.update({u:{'key':self.get_url_info(u)['key'],'post-urls':self.get_archive_post_urls(u)} for u in local_list})
+        self.tracker.update({u:{'key':self.get_url_info(u)['key'],'post-urls':dict_of_archive_post_urls_for_local_list[u]} for u in local_list})
 
         if len(url_list) == 0:
             return self.tracker # Done 
         else:
             return self.get_timebuckets(list(sorted(set(url_list)))) # Keep going 
+
+    def _update_tracker(self, local_list):
+        return 
 
     def get_url_info(self, url: str):
         url_info = {'is_date_url': False}
@@ -99,6 +118,7 @@ class ArchiveProcessor:
     '''
         Given a URL to a publication archive (yearly, monthly, daily), get all post URL's from the archives
     '''
+#    @_timer_function_run
     def get_archive_post_urls(self, archive_url: str) -> list:
         ret = []
         html_doc = requests.get(archive_url).text
@@ -108,7 +128,13 @@ class ArchiveProcessor:
             a = s.find_parent('a')
             ret.append(a['href'])
 
+#        print(f'get_archive_post_urls for {archive_url}')
         return ret
+
+    def _get_soup(self, url):
+        html_doc = requests.get(archive_url).text
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        return soup 
 
 class ArchiveEncoder(JSONEncoder):
     def default(self, o):
@@ -116,7 +142,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/2020/05/01'
+    archive_url = 'https://marker.medium.com/archive/2020'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
