@@ -33,7 +33,7 @@ class DBUtils:
 #                    'refreshable': {'BOOL': u.refreshable}
 #                }   
 #            )
-            self.table.put_item(Item=u.__dict__)
+            resp = self.table.put_item(Item=u.__dict__)
 
         print('INSERT URLS: ', resp)
         return resp
@@ -44,7 +44,7 @@ class DBUtils:
     def upsert_urls(self, urls):
         if self.always_insert: 
             self._insert_urls(urls['parsed_urls'])
-            pass
+            return 
         new_urls = []
         existing_urls = []
         for u in urls['parsed_urls']:
