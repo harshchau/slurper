@@ -7,7 +7,7 @@ from json import JSONEncoder
 import requests
 from reppy.robots import Robots
 from validator_collection import validators, checkers, errors
-from .utils import dynamodb
+from utils import dynamodb
 import time
 import json
 import random 
@@ -31,6 +31,7 @@ class Url:
 #    hostname: str
     domain: str 
     subdomain: str 
+    path: str
 #    suffix: str
     url_type: str 
     time_requested: int  
@@ -63,7 +64,7 @@ class UrlProcessor:
             try:
                 if self.is_valid(u) is True:
                     u = self.process_url(u)
-                    if u.url_type == 'PUB' and self.is_url_live(u.url) == True:
+                    if (u.url_type == 'PUB' or u.url_type == 'PUB_ARCHIVE') and self.is_url_live(u.url) == True:
                         parsed_urls.append(u)
                     elif u.url_type == 'PUB' and self.is_url_live(u.url) == False:
                         error_urls.append(u)
@@ -104,9 +105,11 @@ class UrlProcessor:
         #scheme = url[:url.index([part for part in extract if part][0])]
         subdomain = extract.subdomain
         domain = extract.domain 
-        #suffix = extract.suffix
+        suffix = extract.suffix
+        path = url[url.index(suffix) + len(suffix):]
         #hostname = '.'.join(part for part in extract if part)
         url_type = 'PUB' if (domain == 'medium' and subdomain != '' and subdomain != 'www') else 'UNKNOWN' # Process only medium publications for now
+        url_type = 'PUB_ARCHIVE' if url_type == 'PUB' and path.find('archive') == 1 else url_type
         refreshable = True if url_type == 'PUB' else False
 #        time_requested = datetime.now().strftime("%A, %d, %B %Y %I:%M:%S %p")
 #        ttl = (datetime.strptime(time_requested, "%A, %d, %B %Y %I:%M:%S %p") + import_datetime.timedelta(0,self.ttl_delta(),0,0,0,0,0)).strftime("%A, %d, %B %Y %I:%M:%S %p")
@@ -115,7 +118,7 @@ class UrlProcessor:
         bucket_id = ''
         child_urls = []
 
-        url = Url(url, domain, subdomain, url_type, time_requested, requesting_user, bucket_id, child_urls, refreshable)
+        url = Url(url, domain, subdomain, path, url_type, time_requested, requesting_user, bucket_id, child_urls, refreshable)
 
         return url
 
@@ -147,7 +150,7 @@ if __name__ == "__main__":
     s2 = "https://medium.com"
     s3 = "https://www.google.com"
     s4 = "https://www.medium.com"
-    s5 = 'https://d.medium.com'
+    s5 = 'https://marker.medium.com/archive/2020/08/03'
     l = []
     l.append(s1)
     l.append(s2)
@@ -157,6 +160,6 @@ if __name__ == "__main__":
     urls = UrlProcessor().parse(l)
     print(json.dumps(urls, cls=UrlEncoder, indent=2))
 
-    util = dynamodb.DBUtils()
-    util.upsert_urls(urls)
+#    util = dynamodb.DBUtils()
+#    util.upsert_urls(urls)
     
