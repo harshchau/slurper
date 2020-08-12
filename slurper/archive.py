@@ -52,7 +52,7 @@ class ArchiveProcessor:
             raise Exception(f'Invalid archive URL: {archive_url}')
         else:
             self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key'], 'post-urls':self.get_archive_post_urls(archive_url)}})
-        self.ex = futures.ThreadPoolExecutor(max_workers=20)
+        self.ex = futures.ThreadPoolExecutor(max_workers=20) # 20 workers seems to be ideal
 
     @_timer_function_run
     def get_timebuckets(self, url_list): 
@@ -83,9 +83,6 @@ class ArchiveProcessor:
             return self.tracker # Done 
         else:
             return self.get_timebuckets(list(sorted(set(url_list)))) # Keep going 
-
-    def _update_tracker(self, local_list):
-        return 
 
     def get_url_info(self, url: str):
         url_info = {'is_date_url': False}
@@ -131,18 +128,13 @@ class ArchiveProcessor:
 #        print(f'get_archive_post_urls for {archive_url}')
         return ret
 
-    def _get_soup(self, url):
-        html_doc = requests.get(archive_url).text
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        return soup 
-
 class ArchiveEncoder(JSONEncoder):
     def default(self, o):
         ret = o.__dict__
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/2020'
+    archive_url = 'https://marker.medium.com/archive/2020/08'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
