@@ -160,6 +160,6 @@ if __name__ == "__main__":
     urls = UrlProcessor().parse(l)
     print(json.dumps(urls, cls=UrlEncoder, indent=2))
 
-#    util = dynamodb.DBUtils()
-#    util.upsert_urls(urls)
+    util = dynamodb.DBUtils()
+    util.upsert_urls(urls)
     

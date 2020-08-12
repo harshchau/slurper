@@ -56,19 +56,22 @@ class ArchiveProcessor:
 
     @_timer_function_run
     def get_timebuckets(self, url_list): 
+        print(url_list)
         u = url_list.pop()
+
         # If url is a date url, return. At this point, all peer date urls have been added to url_list and tracker
         if self.get_url_info(u)['is_date_url']:
+            print('GETTING 1')
             if len(url_list) == 0: # To prevent breaks when starting input is a date url only (url_list will be empty)
                 return self.tracker # Done 
             else:
+                print('GETTING 2')
                 return self.get_timebuckets(url_list) # Keep going 
-        html_doc = requests.get(u).text
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        timeline_tags = soup.find_all('div', class_='timebucket')
-        local_list = [t.a['href'] for t in timeline_tags if t.a]
+
 #        print(f'LOCAL_LIST: {len(local_list)} URL_LIST: {len(url_list)} TRACKER: {len(self.tracker)} URL: {u}')
 
+
+        local_list = self._get_child_calendar_urls(u)
         # Concurrent calls to get archive post urls for local list
         archive_post_urls_for_local_list = self.ex.map(self.get_archive_post_urls, local_list)
         real_results = list(archive_post_urls_for_local_list)
@@ -83,6 +86,16 @@ class ArchiveProcessor:
             return self.tracker # Done 
         else:
             return self.get_timebuckets(list(sorted(set(url_list)))) # Keep going 
+
+    def _get_child_calendar_urls(self, url):
+
+        html_doc = requests.get(url).text
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        timeline_tags = soup.find_all('div', class_='timebucket')
+        local_list = [t.a['href'] for t in timeline_tags if t.a]
+        print('>>>>>', local_list)
+
+        return local_list
 
     def get_url_info(self, url: str):
         url_info = {'is_date_url': False}
