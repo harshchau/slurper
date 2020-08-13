@@ -7,7 +7,7 @@ from json import JSONEncoder
 import requests
 from reppy.robots import Robots
 from validator_collection import validators, checkers, errors
-from utils import dynamodb
+from .utils import dynamodb
 import time
 import json
 import random 
