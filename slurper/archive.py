@@ -48,6 +48,9 @@ class ArchiveProcessor:
         # where for an archive, a wrong url still returns the archive page for the url.
         # This check is not required for right initial urls as that check is done when 
         # local_list is created 
+        if archive_url[-1] == '/': # Trailing slash is a directory and was being caught as an error due to a 301 at the end
+            archive_url = archive_url[:-1]
+#            print('ARCHIVE url', type(archive_url), archive_url)
         if self.is_url_valid(archive_url) is False:
             raise Exception(f'Invalid archive URL: {archive_url}')
         else:
@@ -165,7 +168,7 @@ class ArchiveEncoder(JSONEncoder):
         return ret 
 
 if __name__ == '__main__':
-    archive_url = 'https://marker.medium.com/archive/2019/05'
+    archive_url = 'https://marker.medium.com/archive/2020/08/03'
     ap = ArchiveProcessor(archive_url)
     ap.timebuckets = ap.get_timebuckets([archive_url])
     print(json.dumps(ap.timebuckets, cls=ArchiveEncoder, indent=2))
