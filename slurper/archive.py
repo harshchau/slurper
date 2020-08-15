@@ -59,7 +59,10 @@ class ArchiveProcessor:
             self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key'], 'post-urls':self.get_archive_post_urls(archive_url)}})
         self.ex = futures.ThreadPoolExecutor(max_workers=20) # 20 workers seems to be ideal
 
-
+    '''
+    This method was orignially the workhorse (for single and threaded modes). After moving the code to Lambda
+    This is not being used in Lambda. But it can still be used for sanity checks
+    '''
 #    @_timer_function_run
     def get_timebuckets(self, url_list): 
     #    print(url_list)
