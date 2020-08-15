@@ -40,10 +40,12 @@ Class to contain all features related to archives
 '''
 class ArchiveProcessor:
     tracker = dict()
-    soup_dict = dict()
+    soup = None
     ex = None
 
     def __init__(self, archive_url):
+        html_doc = requests.get(archive_url).text
+        self.soup = BeautifulSoup(html_doc, 'html.parser')
         # This check is required only on the initial URL. This is due to the behavior of medium
         # where for an archive, a wrong url still returns the archive page for the url.
         # This check is not required for right initial urls as that check is done when 
@@ -56,6 +58,7 @@ class ArchiveProcessor:
         else:
             self.tracker.update({archive_url:{'key':self.get_url_info(archive_url)['key'], 'post-urls':self.get_archive_post_urls(archive_url)}})
         self.ex = futures.ThreadPoolExecutor(max_workers=20) # 20 workers seems to be ideal
+
 
 #    @_timer_function_run
     def get_timebuckets(self, url_list): 
@@ -93,9 +96,9 @@ class ArchiveProcessor:
             return self.get_timebuckets(list(sorted(set(url_list)))) # Keep going 
 
     def _get_child_calendar_urls(self, url):
-        html_doc = requests.get(url).text
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        timeline_tags = soup.find_all('div', class_='timebucket')
+        #html_doc = requests.get(url).text
+        #soup = BeautifulSoup(html_doc, 'html.parser')
+        timeline_tags = self.soup.find_all('div', class_='timebucket')
         local_list = [t.a['href'] for t in timeline_tags if t.a]
 #        print('>>>>>', local_list)
 
@@ -151,10 +154,10 @@ class ArchiveProcessor:
 #    @_timer_function_run
     def get_archive_post_urls(self, archive_url: str, soup = None) -> list:
         ret = []
-        response = requests.get(archive_url)
-        html_doc = response.text
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        sections = soup.find_all('section')
+        #response = requests.get(archive_url)
+        #html_doc = response.text
+        #soup = BeautifulSoup(html_doc, 'html.parser')
+        sections = self.soup.find_all('section')
         for s in sections:
             a = s.find_parent('a')
             ret.append(a['href'])
