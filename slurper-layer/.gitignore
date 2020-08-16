@@ -1,0 +1,6 @@
+.serverless
+layer
+node_modules
+docker/slurper
+docker/dist.zip
+docker/chrome

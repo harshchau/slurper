@@ -1,0 +1,47 @@
+service: slurper-layer
+
+provider:
+  name: aws
+  runtime: python3.8
+
+plugins:
+  - serverless-plugin-scripts
+
+custom:
+  scripts:
+    hooks:
+      'package:initialize': "rm -rf ./docker/slurper ./layer ./docker/dist.zip && echo DELETED: ./docker/slurper ./layer
+      && rsync -a  --progress /Users/harsh/git/slurper docker --exclude .git --exclude build --exclude dist --exclude tests --exclude slurper-env && echo RSYNC 
+      && cd docker && echo CD docker
+      && docker build -f slurper.Dockerfile . -t teammrkr/slurper --no-cache
+      && docker run -d --rm -it  teammrkr/slurper:latest /bin/bash
+      && container_name=`docker ps --filter ancestor=teammrkr/slurper --format \"{{.Names}}\"`
+      && echo $container_name
+      && docker cp $container_name:/Users/harsh/git/dist.zip .
+      && docker stop $container_name
+      && cd .. && echo $PWD
+      && mkdir -p layer/python/lib/python3.8/site-packages
+      && unzip -q docker/dist.zip -d layer/python/lib/python3.8/site-packages
+      && mv layer/python/lib/python3.8/site-packages/dist/* layer/python/lib/python3.8/site-packages/ 
+      && rm -rf ./layer/python/lib/python3.8/site-packages/dist
+      "
+# Add the following for chrome
+#      && mkdir layer/bin 
+#      && mkdir layer/lib       
+#      && cp docker/chrome/headless-chromium layer/lib/ 
+#      && cp docker/chrome/chromedriver layer/bin/
+#      && mv layer/python/lib/python3.8/site-packages/libX11* layer/lib/ 
+# Add the following to the mv command when installing libs_cffi for lxml layer/python/lib/python3.8/site-packages/dist/.libs_cffi_backend
+
+layers:
+  slurper:
+    path: layer
+    compatibleRuntimes:
+      - python3.8
+resources:
+  Outputs:
+    SlurperLayerExport:
+        Value:
+          Ref: SlurperLambdaLayer
+        Export:
+          Name: SlurperLambdaLayer
